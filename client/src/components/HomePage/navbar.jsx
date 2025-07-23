@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-scroll';
 import logo from '../../assets/icon.png';
 import '../../style/navbar.css';
 
@@ -35,18 +36,18 @@ function Navbar() {
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center gap-4">
-          <a href="/" className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors">
+          <Link to="beranda" smooth={true} duration={500} offset={-80} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
             Beranda
-          </a>
-          <a href="/tentang" className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors">
+          </Link>
+          <Link to="tentang" smooth={true} duration={500} offset={-70} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
             Tentang
-          </a>
-          <a href="/layanan" className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors">
+          </Link>
+          <Link to="layanan" smooth={true} duration={500} offset={-70} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
             Layanan
-          </a>
-          <a href="/ajukan" className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors">
-            Ajukan
-          </a>
+          </Link>
+          <Link to="kontak" smooth={true} duration={500} offset={-70} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
+            Kontak
+          </Link>
           <a href="/login" className="px-6 py-1 text-gray-200 font-semibold shadow-2xl bg-green-700 hover:bg-green-800 transition-all duration-300 rounded-2xl">
             Login
           </a>
@@ -61,17 +62,20 @@ function Navbar() {
 
       {/* Mobile Menu */}
       <div id="navLink" className={`flex flex-col items-center space-y-3 px-6 py-4 mt-2 rounded-xl w-[200px] glass-effect md:hidden transition-all duration-300 absolute right-5 top-[80px] z-50 ${menuOpen ? 'active' : 'hidden'}`}>
-        <a href="/" className="w-full text-center px-4 py-2 text-black font-medium hover:text-blue-500 transition-colors">
+        <Link to="beranda" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-black font-medium">
           Beranda
-        </a>
-        <a href="/tentang" className="w-full text-center px-4 py-2 text-black font-medium hover:text-blue-500 transition-colors">
+        </Link>
+        <Link to="tentang" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-black font-medium">
           Tentang
-        </a>
-        <a href="/layanan" className="w-full text-center px-4 py-2 text-black font-medium hover:text-blue-500 transition-colors">
+        </Link>
+        <Link to="layanan" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-black font-medium">
           Layanan
-        </a>
-        <a href="/ajukan" className="w-full text-center px-4 py-2 rounded-full text-white bg-black font-medium btn-hover transition-all">
+        </Link>
+        <Link to="kontak" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-black font-medium">
           Kontak
+        </Link>
+        <a href="/ajukan" className="w-full text-center px-4 py-2 rounded-full text-white bg-green-800 font-medium ">
+          Login
         </a>
       </div>
     </header>

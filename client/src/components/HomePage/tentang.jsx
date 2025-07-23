@@ -2,6 +2,7 @@ import { useState } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { Menu, Info, Users, BookOpen, Star } from 'lucide-react';
+import { Element } from 'react-scroll';
 
 const sections = {
   profil: {
@@ -82,47 +83,49 @@ function Tentang() {
   ];
 
   return (
-    <section className="bg-black text-white py-10" id="tentang">
-      <div className="container mx-auto max-w-6xl px-6 md:px-10 ">
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar */}
-          <aside className="md:w-1/4 w-full p-4 bg-black/30 border border-gray-700 rounded-2xl ">
-            {navItems.map((item) => (
-              <button
-                key={item.key}
-                onClick={() => setCurrentSection(item.key)}
-                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all text-sm font-medium my-2 ${
-                  currentSection === item.key ? 'bg-green-600 text-white' : 'text-gray-300 hover:bg-green-100 hover:text-black cursor-pointer'
-                }`}
-              >
-                {item.icon} {item.label}
-              </button>
-            ))}
-          </aside>
+    <Element name="tentang">
+      <section className="bg-black text-white py-10 " id="tentang">
+        <div className="container mx-auto max-w-6xl px-6 md:px-10 ">
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Sidebar */}
+            <aside className="md:w-1/4 w-full p-4 bg-black/30 border border-gray-700 rounded-2xl ">
+              {navItems.map((item) => (
+                <button
+                  key={item.key}
+                  onClick={() => setCurrentSection(item.key)}
+                  className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all text-sm font-medium my-2 ${
+                    currentSection === item.key ? 'bg-green-600 text-white' : 'text-gray-300 hover:bg-green-100 hover:text-black cursor-pointer'
+                  }`}
+                >
+                  {item.icon} {item.label}
+                </button>
+              ))}
+            </aside>
 
-          {/* Konten */}
-          <main className="flex-1 md:mx-2">
-            <motion.div key={currentSection} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.5 }} className="bg-gray-900 shadow-md rounded-2xl p-6 md:p-10">
-              <h2 className="text-3xl font-bold text-green-400 mb-6">{sections[currentSection].title}</h2>
+            {/* Konten */}
+            <main className="flex-1 md:mx-2">
+              <motion.div key={currentSection} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.5 }} className="bg-gray-900 shadow-md rounded-2xl p-6 md:p-10">
+                <h2 className="text-3xl font-bold text-green-400 mb-6">{sections[currentSection].title}</h2>
 
-              {sections[currentSection].type === 'grid' ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {sections[currentSection].items.map((item, index) => (
-                    <div key={index} className="bg-gray-800 p-5 rounded-xl shadow hover:shadow-md transition">
-                      <div className="text-4xl mb-3">{item.icon}</div>
-                      <h4 className="text-xl font-semibold text-green-300 mb-1">{item.title}</h4>
-                      <p className="text-gray-300">{item.description}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-200 whitespace-pre-line text-lg">{sections[currentSection].content}</p>
-              )}
-            </motion.div>
-          </main>
+                {sections[currentSection].type === 'grid' ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {sections[currentSection].items.map((item, index) => (
+                      <div key={index} className="bg-gray-800 p-5 rounded-xl shadow hover:shadow-md transition">
+                        <div className="text-4xl mb-3">{item.icon}</div>
+                        <h4 className="text-xl font-semibold text-green-300 mb-1">{item.title}</h4>
+                        <p className="text-gray-300">{item.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-200 whitespace-pre-line text-lg">{sections[currentSection].content}</p>
+                )}
+              </motion.div>
+            </main>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </Element>
   );
 }
 

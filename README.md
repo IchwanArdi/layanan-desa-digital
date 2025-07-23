@@ -1,12 +1,18 @@
-# React + Vite
+## 🏡 Layanan Pengajuan dan Pengaduan Warga Desa
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistem berbasis web untuk mempermudah warga desa dalam melakukan pengajuan data kependudukan (seperti KTP, KK, Surat Domisili) dan menyampaikan pengaduan terhadap fasilitas umum.
 
-Currently, two official plugins are available:
+### ✨ Fitur Utama:
+- Form pengajuan/pengaduan interaktif
+- Tampilan responsif dan modern (React + Tailwind)
+- Efek animasi AOS (Animate On Scroll)
+- Layout gelap (dark theme)
+- Navigasi antar halaman: Beranda, Tentang, Layanan, Hubungi
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🛠️ Teknologi:
+- React + Vite
+- Tailwind CSS
+- AOS Animation
+- Vercel (untuk hosting)
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 📦 Status: Masih dalam pengembangan

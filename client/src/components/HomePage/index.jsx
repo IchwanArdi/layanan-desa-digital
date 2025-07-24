@@ -1,16 +1,21 @@
-import Beranda from './beranda';
-import Layanan from './layanan';
-import Navbar from './navbar';
-import Tentang from './tentang';
-import Contact from './contact';
+import Beranda from './sections/beranda';
+import Layanan from './sections/layanan';
+import Navbar from './sections/navbar';
+import Tentang from './sections/tentang';
+import Contact from './sections/contact';
 import { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-function Index() {
+import usePageMeta from '../Utils/usePageMeta';
+
+function IndexHomePage() {
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
+
+  // untuk mengatur title dan meta description halaman
+  usePageMeta('Pengaduan Warga Desa - Beranda', 'Situs resmi untuk pengajuan dan pengaduan warga desa secara online.');
 
   // Komponen pemisah garis tengah
   const SectionDivider = ({ label }) => (
@@ -39,4 +44,4 @@ function Index() {
   );
 }
 
-export default Index;
+export default IndexHomePage;

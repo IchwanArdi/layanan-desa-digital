@@ -3,8 +3,8 @@ import { FilePlus, MessageCircleWarning, SearchCheck, ThumbsUp, ArrowRight, Cloc
 import { Element } from 'react-scroll';
 
 // Placeholder untuk gambar - menggunakan gradients
-import layananDocumentasi from '../../assets/layanan-dokumentasi.png';
-import layananPengaduan from '../../assets/layanan-pengaduan.png';
+import layananDocumentasi from '../../../assets/layanan-dokumentasi.png';
+import layananPengaduan from '../../../assets/layanan-pengaduan.png';
 
 const layananList = [
   {
@@ -56,7 +56,8 @@ function Layanan() {
         <div className="container mx-auto max-w-6xl px-6 md:px-10">
           {/* Hero Section */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-green-600 mb-4 ">Layanan Digital Desa</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-green-600 mb-4">Layanan Digital Desa</h1>
+            <div className="w-24 h-1 bg-green-600 mx-auto rounded-full mb-5" />
             <p className="text-gray-200 text-lg max-w-2xl mx-auto">Gunakan fitur layanan berikut untuk mempermudah urusan Anda bersama Kelurahan Karangpucung.</p>
           </div>
 

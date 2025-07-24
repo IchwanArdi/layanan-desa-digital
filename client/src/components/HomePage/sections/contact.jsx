@@ -75,6 +75,7 @@ function Contact() {
           {/* Header Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-green-600 mb-4 transition-all duration-300 ">Hubungi Kami</h1>
+            <div className="w-24 h-1 bg-green-600 mx-auto rounded-full mb-5" />
             <p className="text-gray-200 text-lg max-w-2xl mx-auto">Kami siap membantu Anda. Jangan ragu untuk menghubungi kami melalui berbagai cara di bawah ini.</p>
           </div>
 

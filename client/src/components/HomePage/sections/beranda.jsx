@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Element } from 'react-scroll';
-import '../../style/beranda.css';
+import '../../../style/beranda.css';
 
 function Beranda() {
   const [isVisible, setIsVisible] = useState(false);
@@ -34,22 +34,6 @@ function Beranda() {
                 <p className="text-gray-300 text-lg sm:text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0">
                   Ajukan data dan sampaikan pengaduan dengan mudah, cepat, dan langsung ke perangkat desa dalam satu platform terintegrasi.
                 </p>
-
-                {/* Stats */}
-                <div className="flex flex-wrap justify-center lg:justify-start gap-6 text-center py-4">
-                  <div className="flex-1 min-w-[100px]">
-                    <div className="text-2xl font-bold text-green-400">24/7</div>
-                    <div className="text-sm text-gray-400">Layanan</div>
-                  </div>
-                  <div className="flex-1 min-w-[100px]">
-                    <div className="text-2xl font-bold text-green-400">100%</div>
-                    <div className="text-sm text-gray-400">Digital</div>
-                  </div>
-                  <div className="flex-1 min-w-[100px]">
-                    <div className="text-2xl font-bold text-green-400">Instant</div>
-                    <div className="text-sm text-gray-400">Response</div>
-                  </div>
-                </div>
 
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">

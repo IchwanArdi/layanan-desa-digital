@@ -25,7 +25,7 @@ function Beranda() {
                 </div>
 
                 {/* Main Heading */}
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-tight">
+                <h1 className="text-4xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-tight">
                   <span className="block bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">Layanan Digital</span>
                   <span className="block bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 bg-clip-text text-transparent animate-gradient">Desa untuk Warga</span>
                 </h1>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Users } from 'lucide-react';
 import { Link } from 'react-scroll';
 import logo from '../../../assets/icon.png';
 import '../../../style/navbar.css';
@@ -55,23 +56,23 @@ function Navbar() {
 
         {/* Hamburger */}
         <button id="hamburger" onClick={() => setMenuOpen(!menuOpen)} className={`flex flex-col items-center justify-center space-y-2 cursor-pointer z-50 outline-0 md:hidden ${menuOpen ? 'hamburger-active' : ''}`}>
-          <span className="hamburger-line bg-gray-200"></span>
-          <span className="hamburger-line bg-gray-200"></span>
+          <span className="hamburger-line bg-green-600"></span>
+          <span className="hamburger-line bg-green-600"></span>
         </button>
       </div>
 
       {/* Mobile Menu */}
-      <div id="navLink" className={`flex flex-col items-center space-y-3 px-6 py-4 mt-2 rounded-xl w-[200px] glass-effect md:hidden transition-all duration-300 absolute right-5 top-[80px] z-50 ${menuOpen ? 'active' : 'hidden'}`}>
-        <Link to="beranda" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-black font-medium">
+      <div id="navLink" className={`flex flex-col items-center space-y-2 px-6 py-4 rounded-xl w-[200px] glass-effect md:hidden transition-all duration-300 absolute right-5 top-[80px] z-50 ${menuOpen ? 'active' : 'hidden'}`}>
+        <Link to="beranda" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-white font-medium">
           Beranda
         </Link>
-        <Link to="tentang" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-black font-medium">
+        <Link to="tentang" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-white font-medium">
           Tentang
         </Link>
-        <Link to="layanan" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-black font-medium">
+        <Link to="layanan" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-white font-medium">
           Layanan
         </Link>
-        <Link to="kontak" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-black font-medium">
+        <Link to="kontak" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-white font-medium">
           Kontak
         </Link>
         <a href="/ajukan" className="w-full text-center px-4 py-2 rounded-full text-white bg-green-800 font-medium ">

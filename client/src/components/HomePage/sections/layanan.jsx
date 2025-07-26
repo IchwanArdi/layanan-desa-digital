@@ -74,7 +74,7 @@ function Layanan() {
                   <ArrowRight className="w-6 h-6 text-green-600" />
                 </div>
               </div>
-              <p className="text-gray-400 my-5">Semua layanan tersedia dalam satu platform untuk kemudahan akses.</p>
+              <p className="text-gray-300 my-5">Semua layanan tersedia dalam satu platform untuk kemudahan akses.</p>
               <div className="overflow-hidden rounded-lg">
                 <img src={layananDocumentasi} alt="Layanan Dokumentasi" className="w-full h-auto object-cover transition-transform duration-300 " />
               </div>
@@ -91,7 +91,7 @@ function Layanan() {
                   <ArrowRight className="w-6 h-6 text-green-600" />
                 </div>
               </div>
-              <p className="text-gray-400 my-5">Dapat diakses kapan saja dan di mana saja melalui perangkat Anda.</p>
+              <p className="text-gray-300 my-5">Dapat diakses kapan saja dan di mana saja melalui perangkat Anda.</p>
               <div className="overflow-hidden rounded-lg">
                 <img src={layananPengaduan} alt="Layanan Pengaduan" className="w-full h-auto object-cover transition-transform duration-300 " />
               </div>

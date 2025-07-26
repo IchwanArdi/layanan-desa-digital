@@ -4,10 +4,9 @@
 }
 
 .glass-effect {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background-color: rgba(0, 0, 0, 0.9);
+
+  border: 2px solid green;
 }
 
 .btn-hover {
@@ -28,7 +27,7 @@
   transform: translateY(6px) rotate(45deg);
 }
 .hamburger-active .hamburger-line:nth-child(2) {
-  transform: translateY(-6px) rotate(-45deg);
+  transform: translateY(-4px) rotate(-45deg);
 }
 
 #navLink {

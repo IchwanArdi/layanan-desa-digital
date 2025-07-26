@@ -1,7 +1,7 @@
 import Beranda from './sections/beranda';
 import Layanan from './sections/layanan';
 import Navbar from './sections/navbar';
-import Tentang from './sections/tentang';
+import Tentang from './sections/halamanTentang/tentang.jsx';
 import Contact from './sections/contact';
 import { useEffect } from 'react';
 import AOS from 'aos';

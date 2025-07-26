@@ -1,11 +1,26 @@
-import { useState } from 'react';
-import { Info, FilePlus, MessageCircleWarning, SearchCheck, ThumbsUp, Users, MapPin, Phone, Mail, Calendar, FileText, AlertCircle, Clock, Star, CheckCircle } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+import { Info, FilePlus, MessageCircleWarning, SearchCheck, ThumbsUp, MapPin, Phone, Mail } from 'lucide-react';
 import icon from '../../../assets/icon.png';
 
 function Deskripsi() {
-  const [currentSection, setCurrentSection] = useState('profil');
+  const location = useLocation();
 
-  // Simulate navigation without actual routing for demo
+  const getSectionFromPath = (pathname) => {
+    if (pathname.includes('/ajukan-data')) return 'visiMisi';
+    if (pathname.includes('/pengaduan-warga')) return 'perangkat';
+    if (pathname.includes('/lacak-pengajuan')) return 'sejarah';
+    if (pathname.includes('/survei-kepuasan')) return 'fiturGrid';
+    return 'profil';
+  };
+
+  const [currentSection, setCurrentSection] = useState(getSectionFromPath(location.pathname));
+
+  useEffect(() => {
+    setCurrentSection(getSectionFromPath(location.pathname));
+  }, [location.pathname]);
+
   const handleNavigation = (sectionKey) => {
     setCurrentSection(sectionKey);
   };
@@ -227,7 +242,7 @@ Partisipasi Anda dalam survei ini sangat berharga untuk kemajuan pelayanan desa.
                     className={`flex-shrink-0 flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 touch-manipulation select-none  ${
                       currentSection === item.key
                         ? 'bg-green-800 text-white shadow-lg shadow-green-600/25 border border-green-500'
-                        : 'bg-gray-800/60 backdrop-blur-sm text-gray-300 hover:bg-green-600/20 hover:text-green-300 border border-gray-700/50'
+                        : 'bg-gray-800/60 backdrop-blur-sm text-gray-300 hover:bg-green-600/20 hover:text-green-300 border border-gray-700/50 '
                     }`}
                     style={{
                       minWidth: 'fit-content',
@@ -264,7 +279,7 @@ Partisipasi Anda dalam survei ini sangat berharga untuk kemajuan pelayanan desa.
                       key={item.key}
                       onClick={() => handleNavigation(item.key)}
                       className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 text-left group ${
-                        currentSection === item.key ? 'bg-green-700 text-white shadow-lg transform scale-[1.02]' : 'text-gray-300 hover:bg-green-600/20 hover:text-green-300 hover:transform hover:scale-[1.01]'
+                        currentSection === item.key ? 'bg-green-700 text-white shadow-lg transform scale-[1.02]' : 'text-gray-300 hover:bg-green-600/20 hover:text-green-300 hover:transform hover:scale-[1.01] cursor-pointer'
                       }`}
                     >
                       <div className={`p-2 rounded-lg ${currentSection === item.key ? 'bg-white/20' : 'bg-gray-700 group-hover:bg-green-600/30'}`}>{item.icon}</div>

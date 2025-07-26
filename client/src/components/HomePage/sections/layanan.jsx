@@ -11,7 +11,7 @@ const layananList = [
     title: 'Ajukan Data',
     description: 'Ajukan permohonan surat keterangan, dokumen kependudukan, dan lainnya dengan mudah.',
     icon: <FilePlus size={32} className="text-green-600" />,
-    link: '/ajukan',
+    link: '/desa-digital/ajukan-data',
     stats: '2,341 pengajuan',
     time: '2-3 hari kerja',
   },
@@ -19,7 +19,7 @@ const layananList = [
     title: 'Pengaduan Warga',
     description: 'Laporkan masalah lingkungan, pelayanan, atau aduan warga lainnya secara online.',
     icon: <MessageCircleWarning size={32} className="text-red-500" />,
-    link: '/pengaduan',
+    link: '/desa-digital/pengaduan-warga',
     stats: '856 pengaduan',
     time: '24 jam respon',
   },
@@ -27,7 +27,7 @@ const layananList = [
     title: 'Lacak Pengajuan',
     description: 'Cek status permohonan Anda kapan saja dan di mana saja dengan fitur pelacakan otomatis.',
     icon: <SearchCheck size={32} className="text-blue-500" />,
-    link: '/lacak',
+    link: '/desa-digital/lacak-pengajuan',
     stats: '98% akurasi',
     time: 'Real-time',
   },
@@ -35,7 +35,7 @@ const layananList = [
     title: 'Survei Kepuasan',
     description: 'Berikan pendapat dan nilai terhadap layanan yang telah Anda gunakan.',
     icon: <ThumbsUp size={32} className="text-yellow-500" />,
-    link: '/survei',
+    link: '/desa-digital/survei-kepuasan',
     stats: '4.8/5 rating',
     time: '5 menit',
   },
@@ -103,6 +103,8 @@ function Layanan() {
             {layananList.map((layanan, index) => (
               <a
                 href={layanan.link}
+                target="_blank"
+                rel="noopener noreferrer"
                 key={index}
                 className="bg-black border border-gray-700 rounded-2xl transition-all duration-300 p-6 flex flex-col items-start gap-3 group hover:border-green-600 hover:shadow-xl hover:shadow-green-600/20 transform hover:-translate-y-2 hover:bg-gray-900/50"
                 onMouseEnter={() => setHoveredCard(`layanan-${index}`)}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Element } from 'react-scroll';
+
 import '../../../style/beranda.css';
 
 function Beranda() {
@@ -31,7 +32,7 @@ function Beranda() {
                 </h1>
 
                 {/* Subtitle */}
-                <p className="text-gray-300 text-lg sm:text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                <p className="text-gray-300 text-lg sm:text-lg lg:text-xl leading-relaxed// import { useState } from 'react'; max-w-2xl mx-auto lg:mx-0">
                   Ajukan data dan sampaikan pengaduan dengan mudah, cepat, dan langsung ke perangkat desa dalam satu platform terintegrasi.
                 </p>
 
@@ -51,14 +52,19 @@ function Beranda() {
                   </button>
 
                   {/* Secondary Button */}
-                  <button className="group px-8 py-4 border-2 border-gray-600 text-gray-300 font-semibold rounded-2xl hover:border-green-500 hover:text-green-400 transition-all duration-300 backdrop-blur-sm">
+                  <a
+                    href="/desa-digital"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group px-8 py-4 border-2 border-gray-600 text-gray-300 font-semibold rounded-2xl hover:border-green-500 hover:text-green-400 transition-all duration-300 backdrop-blur-sm"
+                  >
                     <span className="flex items-center justify-center gap-2">
                       Pelajari Lebih Lanjut
                       <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </span>
-                  </button>
+                  </a>
                 </div>
               </div>
 

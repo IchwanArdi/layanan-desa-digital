@@ -180,15 +180,15 @@ function Tentang() {
 
   return (
     <Element name="tentang">
-      <section className=" bg-black py-15 min-h-screen" id="tentang">
-        <div className="container mx-auto max-w-6xl px-6 md:px-10 ">
+      <section className="bg-black py-15 min-h-screen" id="tentang">
+        <div className="container mx-auto max-w-6xl px-6 md:px-10">
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-green-600 mb-4">Tentang Karangpucung</h1>
             <div className="w-24 h-1 bg-green-600 mx-auto rounded-full" />
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-8 ">
+          <div className="flex flex-col lg:flex-row gap-8">
             {/* Mobile Menu Toggle */}
             <div className="lg:hidden">
               <button
@@ -204,7 +204,7 @@ function Tentang() {
             </div>
 
             {/* Sidebar Navigation */}
-            <aside className={`lg:w-80 w-full ${isMobileMenuOpen ? 'block' : 'hidden lg:block'}`}>
+            <aside className={`lg:w-80 w-full ${isMobileMenuOpen ? 'block ' : 'hidden lg:block'}`}>
               <div className="sticky top-8 border border-slate-700 rounded-2xl p-6 shadow-2xl">
                 <nav className="space-y-2">
                   {navItems.map((item) => (
@@ -214,10 +214,12 @@ function Tentang() {
                       className={`w-full group flex items-center gap-4 p-4 rounded-xl transition-all duration-300 text-left ${
                         currentSection === item.key
                           ? 'bg-gradient-to-r from-green-500/20 to-cyan-500/20 border border-green-500/30 text-green-300 shadow-lg'
-                          : 'text-slate-300 hover:bg-slate-700/40 hover:text-white hover:border-slate-600/50 border border-transparent'
+                          : 'text-slate-300 hover:bg-slate-700/40 hover:text-white hover:border-slate-600/50 border border-transparent cursor-pointer'
                       }`}
                     >
-                      <div className={`p-2 rounded-lg transition-all duration-300 ${currentSection === item.key ? 'bg-green-500/20 text-green-300' : 'bg-slate-700/50 text-slate-400 group-hover:bg-slate-600/50 group-hover:text-slate-300'}`}>
+                      <div
+                        className={`p-2 rounded-lg transition-all duration-300 ${currentSection === item.key ? 'bg-green-500/20 text-green-300' : 'bg-slate-700/50 text-slate-400 group-hover:bg-slate-600/50 group-hover:text-slate-300 '}`}
+                      >
                         {item.icon}
                       </div>
                       <span className="font-medium">{item.label}</span>
@@ -229,7 +231,7 @@ function Tentang() {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 min-h-[600px]">
+            <main className="flex-1 min-h-[600px] ">
               <div key={currentSection} className=" backdrop-blur-sm border border-slate-700 rounded-2xl p-8 lg:p-12 shadow-2xl transform transition-all duration-500 hover:shadow-3xl">
                 {/* Section Header */}
                 <div className="mb-8">

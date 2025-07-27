@@ -4,9 +4,11 @@ import AuthForm from './AuthForm.jsx';
 export default function LoginPage() {
   const navigate = useNavigate();
 
+  console.log('URL API:', import.meta.env.VITE_API_URL); // debug
+
   const handleLogin = async (data) => {
     try {
-      const response = await fetch('https://layanan-desa-digital-production.up.railway.app/api/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

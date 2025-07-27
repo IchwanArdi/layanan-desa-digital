@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link as ScrollLink } from 'react-scroll';
+import { Link as RouterLink } from 'react-router-dom';
 import logo from '../../../assets/icon.png';
 import '../../../style/navbar.css';
 
@@ -36,21 +37,21 @@ function Navbar() {
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center gap-4">
-          <Link to="beranda" smooth={true} duration={500} offset={-80} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
+          <ScrollLink to="beranda" smooth={true} duration={500} offset={-80} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
             Beranda
-          </Link>
-          <Link to="tentang" smooth={true} duration={500} offset={-70} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
+          </ScrollLink>
+          <ScrollLink to="tentang" smooth={true} duration={500} offset={-70} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
             Tentang
-          </Link>
-          <Link to="layanan" smooth={true} duration={500} offset={-70} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
+          </ScrollLink>
+          <ScrollLink to="layanan" smooth={true} duration={500} offset={-70} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
             Layanan
-          </Link>
-          <Link to="kontak" smooth={true} duration={500} offset={-70} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
+          </ScrollLink>
+          <ScrollLink to="kontak" smooth={true} duration={500} offset={-70} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
             Kontak
-          </Link>
-          <Link to="/auth/login" className="px-6 py-1 text-gray-200 font-semibold shadow-2xl bg-green-700 hover:bg-green-800 transition-all duration-300 rounded-2xl">
+          </ScrollLink>
+          <RouterLink to="/auth/login" className="px-6 py-1 text-gray-200 font-semibold shadow-2xl bg-green-700 hover:bg-green-800 transition-all duration-300 rounded-2xl">
             Login
-          </Link>
+          </RouterLink>
         </nav>
 
         {/* Hamburger */}
@@ -62,21 +63,21 @@ function Navbar() {
 
       {/* Mobile Menu */}
       <div id="navLink" className={`flex flex-col items-center space-y-2 px-6 py-4 rounded-xl w-[200px] glass-effect md:hidden transition-all duration-300 absolute right-5 top-[80px] z-50 ${menuOpen ? 'active' : 'hidden'}`}>
-        <Link to="beranda" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-white font-medium">
+        <ScrollLink to="beranda" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-white font-medium">
           Beranda
-        </Link>
-        <Link to="tentang" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-white font-medium">
+        </ScrollLink>
+        <ScrollLink to="tentang" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-white font-medium">
           Tentang
-        </Link>
-        <Link to="layanan" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-white font-medium">
+        </ScrollLink>
+        <ScrollLink to="layanan" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-white font-medium">
           Layanan
-        </Link>
-        <Link to="kontak" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-white font-medium">
+        </ScrollLink>
+        <ScrollLink to="kontak" smooth={true} duration={500} offset={-80} className="w-full text-center px-4 py-2 text-white font-medium">
           Kontak
-        </Link>
-        <a href="/ajukan" className="w-full text-center px-4 py-2 rounded-full text-white bg-green-800 font-medium ">
+        </ScrollLink>
+        <RouterLink to="/auth/login" className="w-full text-center px-4 py-2 rounded-full text-white bg-green-800 font-medium ">
           Login
-        </a>
+        </RouterLink>
       </div>
     </header>
   );

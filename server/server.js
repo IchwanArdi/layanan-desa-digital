@@ -3,6 +3,7 @@ const connectDB = require('./config/db');
 const cors = require('cors');
 const authRoutes = require('./routes/auth'); // ganti sesuai nama file router kamu
 const session = require('express-session');
+const MongoStore = require('connect-mongo'); // untuk menyimpan session di MongoDB
 const dotenv = require('dotenv');
 
 const app = express();
@@ -15,19 +16,22 @@ connectDB();
 app.use(express.json());
 app.use(
   cors({
-    origin: 'http://localhost:5173', // frontend
+    origin: ['http://localhost:5173', 'https://layanan-desa-digital.vercel.app'], // frontend
     credentials: true,
   })
 );
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || 'fallback-secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    // Tidak ada store, akan menggunakan memory store default
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI, // sambung ke MongoDB kamu
+      ttl: 14 * 24 * 60 * 60, // waktu simpan session (detik)
+    }),
     cookie: {
-      maxAge: 14 * 24 * 60 * 60 * 1000, // 14 hari dalam milliseconds
+      maxAge: 14 * 24 * 60 * 60 * 1000,
     },
   })
 );

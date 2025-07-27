@@ -1,4 +1,14 @@
 {
+  "name": "pengaduan-desa",
+  "version": "1.0.0",
+  "description": "Aplikasi Pengaduan Desa",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js"
+  },
+  "author": "Asus",
+  "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "connect-flash": "^0.1.1",

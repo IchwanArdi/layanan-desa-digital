@@ -4,8 +4,8 @@
   "description": "Aplikasi Pengaduan Desa",
   "main": "server.js",
   "scripts": {
-    "start": "node server/server.js",
-    "dev": "nodemon server/server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "author": "Asus",
   "license": "ISC",

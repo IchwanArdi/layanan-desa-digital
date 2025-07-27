@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users } from 'lucide-react';
-import { Link } from 'react-scroll';
+import { Link } from 'react-router-dom';
 import logo from '../../../assets/icon.png';
 import '../../../style/navbar.css';
 
@@ -49,9 +48,9 @@ function Navbar() {
           <Link to="kontak" smooth={true} duration={500} offset={-70} className="px-4 py-2 text-gray-200 font-medium hover:text-green-500 transition-colors cursor-pointer">
             Kontak
           </Link>
-          <a href="/login" className="px-6 py-1 text-gray-200 font-semibold shadow-2xl bg-green-700 hover:bg-green-800 transition-all duration-300 rounded-2xl">
+          <Link to="/auth/login" className="px-6 py-1 text-gray-200 font-semibold shadow-2xl bg-green-700 hover:bg-green-800 transition-all duration-300 rounded-2xl">
             Login
-          </a>
+          </Link>
         </nav>
 
         {/* Hamburger */}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Element } from 'react-scroll';
-
+import { Link } from 'react-router-dom';
 import '../../../style/beranda.css';
 
 function Beranda() {
@@ -42,12 +42,12 @@ function Beranda() {
                   <button className="group relative px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-2xl overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg">
                     <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"></div>
-                    <span className="relative z-10 flex items-center justify-center gap-2">
+                    <Link to="/auth/login" className="relative z-10 flex items-center justify-center gap-2">
                       Ajukan Sekarang
                       <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
-                    </span>
+                    </Link>
                     <div className="absolute inset-0 rounded-2xl border-2 border-green-400 opacity-0 group-hover:opacity-100 animate-ping"></div>
                   </button>
 

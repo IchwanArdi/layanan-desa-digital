@@ -3,8 +3,9 @@ import { createRoot } from 'react-dom/client';
 import IndexHomePage from './components/HomePage/index.jsx';
 import IndexDesaDigital from './components/DesaDigital/index.jsx';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import LoginPage from './components/Login/LoginPage.jsx';
+import RegisterPage from './components/Login/RegisterPage.jsx';
 import './App.css';
-import Deskripsi from './components/DesaDigital/sections/Deskripsi.jsx';
 
 // Solusi: Flat Routes - Cocok untuk struktur komponen Anda
 const router = createBrowserRouter([
@@ -35,6 +36,16 @@ const router = createBrowserRouter([
   {
     path: '/desa-digital/survei-kepuasan',
     element: <IndexDesaDigital />,
+  },
+
+  // Halaman Login dan Register
+  {
+    path: '/auth/login',
+    element: <LoginPage />,
+  },
+  {
+    path: '/auth/register',
+    element: <RegisterPage />,
   },
 ]);
 

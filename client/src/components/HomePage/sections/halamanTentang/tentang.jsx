@@ -58,7 +58,7 @@ function Tentang() {
 
             {/* Sidebar Navigation */}
             <aside className={`lg:w-80 w-full ${isMobileMenuOpen ? 'block ' : 'hidden lg:block'}`}>
-              <div className="sticky top-8 border border-slate-700 rounded-2xl p-6 shadow-2xl">
+              <div className="sticky top-25 border border-slate-700 rounded-2xl p-6 shadow-2xl">
                 <nav className="space-y-2">
                   {navItems.map((item) => (
                     <button

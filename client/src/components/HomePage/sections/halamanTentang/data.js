@@ -3,9 +3,10 @@
 export const sections = {
   profil: {
     title: 'Profil Kelurahan',
-    content: `Kelurahan Karangpucung adalah salah satu kelurahan yang terletak di Kecamatan Purwokerto Selatan, Kabupaten Banyumas, Jawa Tengah. Kelurahan ini memiliki luas wilayah sekitar 4,2 km² dengan jumlah penduduk kurang lebih 8.500 jiwa yang tersebar dalam 2.400 kepala keluarga.
+    content: `Kelurahan Karangpucung adalah salah satu kelurahan yang terletak di Kecamatan Purwokerto Selatan, Kabupaten Banyumas, Jawa Tengah. Kelurahan ini memiliki luas wilayah sekitar 4,2 km² dengan jumlah penduduk kurang lebih 8.500 jiwa yang tersebar dalam 2.400 kepala keluarga. \n  
+    Secara geografis, Karangpucung berbatasan dengan:
 
-Secara geografis, Karangpucung berbatasan dengan:
+
 - Utara: Kelurahan Teluk
 - Selatan: Kelurahan Kedungwuluh
 - Timur: Kelurahan Purwokerto Wetan

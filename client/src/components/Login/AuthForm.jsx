@@ -2,11 +2,11 @@ import { useState } from 'react';
 import icon from '../../assets/icon.png';
 import { Link } from 'react-router-dom';
 
-export default function AuthForm({ type, onSubmit }) {
+export default function AuthForm({ type, onSubmit, loading }) {
   const [formData, setFormData] = useState({
     nama: '',
     email: '',
-    nohp: '',
+    telepon: '',
     rt: '',
     rw: '',
     jalan: '',
@@ -18,9 +18,9 @@ export default function AuthForm({ type, onSubmit }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    await onSubmit(formData);
   };
 
   return (
@@ -54,9 +54,9 @@ export default function AuthForm({ type, onSubmit }) {
               />
               <input
                 type="text"
-                name="nohp"
+                name="telepon"
                 placeholder="08xxxxxxxxxx"
-                value={formData.nohp}
+                value={formData.telepon}
                 onChange={handleChange}
                 required
                 className="p-2 rounded bg-gray-800 text-white border-2 border-gray-600 focus:outline-none focus:border-green-400 transition duration-300"
@@ -122,8 +122,8 @@ export default function AuthForm({ type, onSubmit }) {
             className="p-2 rounded bg-gray-800 text-white border-2 border-gray-600 focus:outline-none focus:border-green-400 transition duration-300"
           />
 
-          <button type="submit" className="bg-green-600 hover:bg-green-500 transition duration-300 text-white font-semibold py-2 rounded cursor-pointer">
-            {type === 'login' ? 'Login' : 'Daftar Sekarang'}
+          <button type="submit" disabled={loading} className={`bg-green-600 hover:bg-green-500 transition duration-300 text-white font-semibold py-2 rounded cursor-pointer w-full ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+            {loading ? (type === 'login' ? 'Sedang login...' : 'Sedang daftar...') : type === 'login' ? 'Login' : 'Daftar Sekarang'}
           </button>
 
           <div className="text-center text-sm text-gray-400 mt-2">

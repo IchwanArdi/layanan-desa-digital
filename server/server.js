@@ -1,7 +1,7 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const cors = require('cors');
-const authRoutes = require('./routes/auth'); // ganti sesuai nama file router kamu
+// const authRoutes = require('./routes/auth'); // ganti sesuai nama file router kamu
 const session = require('express-session');
 const MongoStore = require('connect-mongo'); // untuk menyimpan session di MongoDB
 const dotenv = require('dotenv');
@@ -36,8 +36,11 @@ app.use(
   })
 );
 
-// Gunakan route dari /routes/auth.js
-app.use('/api', authRoutes); // semua route diawali dengan /api
+// Routes
+const loginRoute = require('./routes/auth/login');
+const registerRoute = require('./routes/auth/register');
+app.use('/api', loginRoute); // semua route diawali dengan /api
+app.use('/api', registerRoute); // semua route diawali dengan /api
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

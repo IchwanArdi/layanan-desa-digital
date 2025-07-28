@@ -1,5 +1,7 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import { StrictMode } from 'react'; // StrictMode untuk deteksi masalah di React
+import { createRoot } from 'react-dom/client'; // createRoot untuk React 18
+import { ToastContainer } from 'react-toastify'; // untuk notifikasi
+import 'react-toastify/dist/ReactToastify.css'; // impor CSS notifikasi
 import IndexHomePage from './components/HomePage/index.jsx';
 import IndexDesaDigital from './components/DesaDigital/index.jsx';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
@@ -59,5 +61,6 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RouterProvider router={router} />
+    <ToastContainer position="top-right" autoClose={3000} theme="dark" />
   </StrictMode>
 );

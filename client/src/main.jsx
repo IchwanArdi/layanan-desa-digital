@@ -7,10 +7,14 @@ import IndexDesaDigital from './components/DesaDigital/index.jsx';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import LoginPage from './components/Login/LoginPage.jsx';
 import RegisterPage from './components/Login/RegisterPage.jsx';
-import DashboardPage from './components/HalamanUtama/DashboardPage.jsx';
+import IndexHalamanUtama from './components/HalamanUtama/Index.jsx';
+import DashboardPage from './components/HalamanUtama/pages/DashboardPage.jsx';
+import LayananDokumenPage from './components/HalamanUtama/pages/LayananDokumenPage.jsx';
+import PengajuanPage from './components/HalamanUtama/pages/PengajuanPage.jsx';
+import ProfilPage from './components/HalamanUtama/pages/ProfilPage.jsx';
 import './App.css';
 
-// Solusi: Flat Routes - Cocok untuk struktur komponen Anda
+// Clean Professional URLs
 const router = createBrowserRouter([
   {
     path: '/',
@@ -51,10 +55,28 @@ const router = createBrowserRouter([
     element: <RegisterPage />,
   },
 
-  // Halaman Dashboard
+  // Dashboard Routes - Clean URLs
   {
-    path: '/desa-digital/dashboard',
-    element: <DashboardPage />,
+    path: '/dashboard',
+    element: <IndexHalamanUtama />,
+    children: [
+      {
+        path: '', // Default route untuk /dashboard
+        element: <DashboardPage />,
+      },
+      {
+        path: 'layanan-dokumen',
+        element: <LayananDokumenPage />,
+      },
+      {
+        path: 'pengajuan',
+        element: <PengajuanPage />,
+      },
+      {
+        path: 'profil',
+        element: <ProfilPage />,
+      },
+    ],
   },
 ]);
 

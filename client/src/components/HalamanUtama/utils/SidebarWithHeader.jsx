@@ -1,30 +1,32 @@
-import logo from '../../assets/logo.png';
-import { useLocation } from 'react-router-dom';
+// SidebarWithHeader.jsx
+import logo from '../../../assets/logo.png';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { LogOut, User, Home, FileText, MessageSquare, X, Menu } from 'lucide-react';
 import { navItems } from './data';
 
-function Sidebar() {
+function SidebarWithHeader() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Data user - nanti bisa diganti dengan data dari API atau props
   const userName = 'Ahmad Suharto';
 
   const getSectionFromPath = (pathname) => {
-    if (pathname.includes('/dashboard')) return 'dashboard';
-    if (pathname.includes('/layanan-dokumen')) return 'layanan-dokumen';
-    if (pathname.includes('/pengajuan')) return 'pengajuan';
-    if (pathname.includes('/profil')) return 'profil';
+    if (pathname === '/dashboard' || pathname === '/dashboard/') return 'dashboard';
+    if (pathname.includes('/dashboard/layanan-dokumen')) return 'layanan-dokumen';
+    if (pathname.includes('/dashboard/pengajuan')) return 'pengajuan';
+    if (pathname.includes('/dashboard/profil')) return 'profil';
     return 'dashboard'; // Default section
   };
 
   // Function untuk mendapatkan title berdasarkan route
   const getPageTitle = (pathname) => {
-    if (pathname.includes('/dashboard')) return 'Dashboard';
-    if (pathname.includes('/layanan-dokumen')) return 'Layanan Dokumen';
-    if (pathname.includes('/pengajuan')) return 'Pengajuan';
-    if (pathname.includes('/profil')) return 'Profil';
+    if (pathname === '/dashboard' || pathname === '/dashboard/') return 'Dashboard';
+    if (pathname.includes('/dashboard/layanan-dokumen')) return 'Layanan Dokumen';
+    if (pathname.includes('/dashboard/pengajuan')) return 'Pengajuan';
+    if (pathname.includes('/dashboard/profil')) return 'Profil';
     return 'Dashboard'; // Default title
   };
 
@@ -52,7 +54,19 @@ function Sidebar() {
   }, []);
 
   const handleNavigation = (sectionKey) => {
-    setCurrentSection(sectionKey);
+    // Navigasi ke route yang sesuai
+    const routeMap = {
+      dashboard: '/dashboard',
+      'layanan-dokumen': '/dashboard/layanan-dokumen',
+      pengajuan: '/dashboard/pengajuan',
+      profil: '/dashboard/profil',
+    };
+
+    // Navigate ke route yang sesuai
+    if (routeMap[sectionKey]) {
+      navigate(routeMap[sectionKey]);
+    }
+
     // Close sidebar setelah navigasi di mobile
     if (window.innerWidth < 1024) {
       setIsSidebarOpen(false);
@@ -155,4 +169,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default SidebarWithHeader;

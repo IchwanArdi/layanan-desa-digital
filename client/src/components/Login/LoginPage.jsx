@@ -26,7 +26,7 @@ export default function LoginPage() {
       if (response.ok) {
         toast.success(result.message);
         localStorage.setItem('user', JSON.stringify(result.user));
-        navigate('/desa-digital/dashboard');
+        navigate('/dashboard');
       } else {
         toast.error(result.message);
       }

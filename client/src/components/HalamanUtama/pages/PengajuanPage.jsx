@@ -1,3 +1,5 @@
+import { Send, CircleCheck } from 'lucide-react';
+
 // PengajuanPage.jsx
 function PengajuanPage() {
   return (
@@ -54,7 +56,7 @@ function PengajuanPage() {
 
                 <div className="p-4 bg-green-50 border rounded-lg">
                   <div className="flex items-start space-x-3">
-                    <i data-lucide="check-circle" className="h-5 w-5 text-green-600 mt-0.5"></i>
+                    <CircleCheck className="h-5 w-5 text-green-600 mt-0.5" />
                     <div>
                       <p className="text-green-800 text-sm font-medium">Jaminan Privasi</p>
                       <p className="text-green-700 text-sm">Data pengaduan dienkripsi dan hanya diakses oleh petugas berwenang untuk penanganan.</p>
@@ -64,9 +66,9 @@ function PengajuanPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-700 hover:to-emerald-700 hover-scale transition-all duration-200 shadow-lg flex items-center justify-center space-x-2"
+                  className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-700 hover:to-emerald-700 hover-scale transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 cursor-pointer"
                 >
-                  <i data-lucide="send" className="h-5 w-5"></i>
+                  <Send className="h-5 w-5" />
                   <span>Kirim Pengaduan</span>
                 </button>
               </form>

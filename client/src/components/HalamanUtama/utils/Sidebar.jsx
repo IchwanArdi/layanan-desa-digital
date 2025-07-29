@@ -40,7 +40,7 @@ export default function Sidebar({ isSidebarOpen, closeSidebar, handleNavigation,
               key={item.key}
               onClick={() => handleNavigation(item.key)}
               className={`w-full flex items-center space-x-3 px-6 py-4 transition-all duration-200 text-left group ${
-                currentSection === item.key ? 'bg-green-100 text-green-600 border-r-4 border-green-600' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                currentSection === item.key ? 'bg-green-100 text-green-600 border-r-4 border-green-600' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer'
               }`}
             >
               <div className={`transition-colors duration-200 ${currentSection === item.key ? 'text-green-600' : 'text-gray-500 group-hover:text-gray-700'}`}>{getIconComponent(item.icon)}</div>

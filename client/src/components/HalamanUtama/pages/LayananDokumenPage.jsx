@@ -1,3 +1,5 @@
+import { Send, CircleAlert } from 'lucide-react';
+
 // PengajuanPage.jsx
 function PengajuanPage() {
   return (
@@ -81,7 +83,7 @@ function PengajuanPage() {
 
                 <div className="p-4 bg-blue-50 border rounded-lg">
                   <div className="flex items-start space-x-3">
-                    <i data-lucide="alert-circle" className="h-5 w-5 text-blue-600 mt-0.5"></i>
+                    <CircleAlert className="h-5 w-5 text-blue-600 mt-0.5" />
                     <div>
                       <p className="text-blue-800 text-sm font-medium">Keamanan Data</p>
                       <p className="text-blue-700 text-sm">Semua data pribadi akan dienkripsi end-to-end untuk menjamin keamanan dan privasi Anda.</p>
@@ -89,8 +91,12 @@ function PengajuanPage() {
                   </div>
                 </div>
 
-                <button type="submit" className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 hover-scale transition-all duration-200 shadow-lg">
-                  Kirim Pengajuan
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 hover-scale transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 cursor-pointer"
+                >
+                  <Send className="h-5 w-5" />
+                  <span>Kirim Pengaduan</span>
                 </button>
               </form>
             </div>

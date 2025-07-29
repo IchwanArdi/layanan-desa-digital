@@ -43,21 +43,21 @@ export default function Header({ toggleSidebar, userName }) {
 
         {/* Kanan: Theme toggle & profil */}
         <div className="flex items-center gap-x-4">
-          <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Toggle Dark Mode">
+          <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" aria-label="Toggle Dark Mode">
             <Moon className="w-5 h-5 text-gray-600" />
           </button>
 
           {/* Profil Button */}
           <div className="relative" ref={dropdownRef}>
-            <button onClick={() => setProfilOpen(!profilOpen)} className="p-1 rounded-full hover:bg-gray-200 transition" aria-label="User Menu">
+            <button onClick={() => setProfilOpen(!profilOpen)} className="p-2 rounded-lg hover:bg-gray-200 transition cursor-pointer" aria-label="User Menu">
               <User className="h-5 w-5 text-gray-700" />
             </button>
 
             {/* Dropdown */}
             {profilOpen && (
-              <div className="absolute right-0 mt-2 w-48 top-15 bg-black/30 shadow-lg rounded-xl py-3 px-4 z-50">
+              <div className="absolute right-0 mt-2 w-48 top-13 bg-white shadow-lg rounded-xl py-3 px-4 z-50">
                 <p className="text-sm text-gray-800 font-medium mb-2">Halo, {userName}!</p>
-                <hr className="border-black mb-2" />
+                <hr className="border-gray-200 mb-2" />
                 <a href="/home" className="flex items-center text-sm text-red-600 hover:text-red-800 transition-colors gap-2">
                   <LogOut className="w-4 h-4" />
                   Keluar

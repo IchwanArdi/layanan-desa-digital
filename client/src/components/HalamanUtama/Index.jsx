@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import SidebarWithHeader from './utils/SidebarWithHeader.jsx';
+import 'aos/dist/aos.css';
 
 export default function IndexHalamanUtama() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export default function IndexHalamanUtama() {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-white">
         <SidebarWithHeader />
 
         {/* Main Content */}

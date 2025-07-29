@@ -21,7 +21,7 @@ export default function IndexHalamanUtama() {
 
   return (
     <>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gray-50">
         <SidebarWithHeader />
 
         {/* Main Content */}

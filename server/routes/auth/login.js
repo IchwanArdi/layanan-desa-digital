@@ -1,4 +1,3 @@
-// routes/auth/login.js
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
@@ -14,13 +13,16 @@ router.post('/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Password salah' });
 
+    // Set session
+    req.session.user = {
+      id: user._id,
+      nama: user.nama,
+      email: user.email,
+    };
+
     return res.status(200).json({
       message: 'Login berhasil',
-      user: {
-        id: user._id,
-        nama: user.nama,
-        email: user.email,
-      },
+      user: req.session.user,
     });
   } catch (err) {
     console.error('Login error:', err);

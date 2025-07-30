@@ -7,8 +7,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  console.log('URL API:', import.meta.env.VITE_API_URL); // untuk debugging
-
   const handleLogin = async (data) => {
     setLoading(true); // mulai loading
     try {

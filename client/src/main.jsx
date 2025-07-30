@@ -2,6 +2,7 @@ import { StrictMode } from 'react'; // StrictMode untuk deteksi masalah di React
 import { createRoot } from 'react-dom/client'; // createRoot untuk React 18
 import { ToastContainer } from 'react-toastify'; // untuk notifikasi
 import 'react-toastify/dist/ReactToastify.css'; // impor CSS notifikasi
+import ProtectedRoute from './components/HalamanUtama/Utils/ProtectedRoute.jsx'; // untuk proteksi route
 import IndexHomePage from './components/HomePage/index.jsx';
 import IndexDesaDigital from './components/DesaDigital/index.jsx';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ import DashboardPage from './components/HalamanUtama/pages/DashboardPage.jsx';
 import LayananDokumenPage from './components/HalamanUtama/pages/LayananDokumenPage.jsx';
 import PengajuanPage from './components/HalamanUtama/pages/PengajuanPage.jsx';
 import ProfilPage from './components/HalamanUtama/pages/ProfilPage.jsx';
+import NotFoundPage from './components/404/NotFoundPage.jsx';
 import './App.css';
 
 // Clean Professional URLs
@@ -45,6 +47,13 @@ const router = createBrowserRouter([
     element: <IndexDesaDigital />,
   },
 
+  // Halaman Not Found
+  {
+    path: '*',
+    element: <NotFoundPage />,
+    key: 'not-found',
+  },
+
   // Halaman Login dan Register
   {
     path: '/auth/login',
@@ -58,10 +67,14 @@ const router = createBrowserRouter([
   // Dashboard Routes - Clean URLs
   {
     path: '/dashboard',
-    element: <IndexHalamanUtama />,
+    element: (
+      <ProtectedRoute>
+        <IndexHalamanUtama />
+      </ProtectedRoute>
+    ),
     children: [
       {
-        path: '', // Default route untuk /dashboard
+        path: '',
         element: <DashboardPage />,
       },
       {
@@ -75,6 +88,11 @@ const router = createBrowserRouter([
       {
         path: 'profil',
         element: <ProfilPage />,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
+        key: 'not-found',
       },
     ],
   },

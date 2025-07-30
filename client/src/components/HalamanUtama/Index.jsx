@@ -1,7 +1,7 @@
 // IndexHalamanUtama.jsx
 import { useEffect } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
-import SidebarWithHeader from './utils/SidebarWithHeader.jsx';
+import SidebarWithHeader from './navbar-header/SidebarWithHeader.jsx';
 import 'aos/dist/aos.css';
 
 export default function IndexHalamanUtama() {

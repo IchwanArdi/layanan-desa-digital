@@ -2,8 +2,34 @@
 import { LogOut, Menu, User, Moon } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function Header({ toggleSidebar, userName }) {
+  const navigate = useNavigate(); // untuk navigasi ke halaman lain
+  // Fungsi untuk menangani logout
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/logout`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success(result.message);
+        localStorage.removeItem('user'); // hapus session local
+        navigate('/home'); // redirect ke halaman utama/login
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Terjadi kesalahan saat logout');
+    }
+  };
+
   const location = useLocation();
   const [profilOpen, setProfilOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -58,10 +84,10 @@ export default function Header({ toggleSidebar, userName }) {
               <div className="absolute right-0 mt-2 w-48 top-13 bg-white shadow-lg rounded-xl py-3 px-4 z-50">
                 <p className="text-sm text-gray-800 font-medium mb-2">Halo, {userName}!</p>
                 <hr className="border-gray-200 mb-2" />
-                <a href="/home" className="flex items-center text-sm text-red-600 hover:text-red-800 transition-colors gap-2">
+                <button onClick={handleLogout} className="flex items-center text-sm text-red-600 hover:text-red-800 transition-colors gap-2 w-full cursor-pointer">
                   <LogOut className="w-4 h-4" />
                   Keluar
-                </a>
+                </button>
               </div>
             )}
           </div>

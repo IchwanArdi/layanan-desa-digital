@@ -25,13 +25,15 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URI, // sambung ke MongoDB kamu
       ttl: 14 * 24 * 60 * 60, // waktu simpan session (detik)
     }),
     cookie: {
-      maxAge: 14 * 24 * 60 * 60 * 1000,
+      maxAge: 14 * 24 * 60 * 60 * 1000, // 14 hari
+      httpOnly: true, // aman, tidak bisa diakses dari JS frontend
+      secure: process.env.NODE_ENV === 'production', // aktif hanya jika HTTPS
     },
   })
 );
@@ -39,8 +41,14 @@ app.use(
 // Routes
 const loginRoute = require('./routes/auth/login');
 const registerRoute = require('./routes/auth/register');
+const logoutRoute = require('./routes/auth/logout');
+const dashboardRoutes = require('./routes/protected/dashboard');
+const checkAuthRoute = require('./routes/auth/checkAuth');
 app.use('/api', loginRoute); // semua route diawali dengan /api
 app.use('/api', registerRoute); // semua route diawali dengan /api
+app.use('/api', logoutRoute); // tambahkan route logout
+app.use('/api', dashboardRoutes); // semua mulai dari /api/dashboard akan diproteksi
+app.use('/api', checkAuthRoute); // route untuk cek autentikasi
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

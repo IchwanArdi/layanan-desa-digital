@@ -21,19 +21,22 @@ app.use(
   })
 );
 
+app.set('trust proxy', 1); // penting di Railway / Vercel
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI, // sambung ke MongoDB kamu
-      ttl: 14 * 24 * 60 * 60, // waktu simpan session (detik)
+      mongoUrl: process.env.MONGO_URI,
+      ttl: 14 * 24 * 60 * 60,
     }),
     cookie: {
-      maxAge: 14 * 24 * 60 * 60 * 1000, // 14 hari
-      httpOnly: true, // aman, tidak bisa diakses dari JS frontend
-      secure: process.env.NODE_ENV === 'production', // aktif hanya jika HTTPS
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
     },
   })
 );

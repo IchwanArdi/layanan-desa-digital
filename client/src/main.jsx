@@ -20,11 +20,7 @@ import './App.css';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/home" replace />,
-  },
-  {
-    path: '/home',
-    element: <IndexHomePage />,
+    element: <IndexHomePage />, // langsung root sebagai homepage
   },
   {
     path: '/desa-digital',

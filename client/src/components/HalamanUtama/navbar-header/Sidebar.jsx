@@ -1,9 +1,35 @@
 // components/Layout/Sidebar.jsx
 import logo from '../../../assets/logo.png';
-import { Home, FileText, MessageSquare, User, LogOut, X } from 'lucide-react';
 import { navItems } from './data';
+import { Home, FileText, MessageSquare, User, LogOut, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function Sidebar({ isSidebarOpen, closeSidebar, handleNavigation, currentSection }) {
+  const navigate = useNavigate(); // untuk navigasi ke halaman lain
+  // Fungsi untuk menangani logout
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/logout`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success(result.message);
+        localStorage.removeItem('user'); // hapus session local
+        navigate('/'); // redirect ke halaman utama/login
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Terjadi kesalahan saat logout');
+    }
+  };
+
   const getIconComponent = (iconName) => {
     const icons = {
       Home: <Home size={20} />,
@@ -50,10 +76,10 @@ export default function Sidebar({ isSidebarOpen, closeSidebar, handleNavigation,
         </nav>
 
         <div className="absolute bottom-6 left-6 right-6">
-          <a href="/home" className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 group">
+          <button onClick={handleLogout} className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 group">
             <LogOut className="h-5 w-5 text-gray-500 group-hover:text-gray-700 transition-colors duration-200" />
             <span className="group-hover:text-gray-900 transition-colors duration-200">Keluar</span>
-          </a>
+          </button>
         </div>
       </div>
     </>

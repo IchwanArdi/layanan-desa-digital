@@ -20,7 +20,7 @@ export default function Header({ toggleSidebar, userName }) {
       if (response.ok) {
         toast.success(result.message);
         localStorage.removeItem('user'); // hapus session local
-        navigate('/home'); // redirect ke halaman utama/login
+        navigate('/'); // redirect ke halaman utama/login
       } else {
         toast.error(result.message);
       }

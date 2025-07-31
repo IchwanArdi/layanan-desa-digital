@@ -1,7 +1,33 @@
 import { LogOut, FileText, MessageSquare, CircleCheck, Settings, Bell, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 // ProfilPage.jsx
 function ProfilPage() {
+  const navigate = useNavigate(); // untuk navigasi ke halaman lain
+  // Fungsi untuk menangani logout
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/logout`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success(result.message);
+        localStorage.removeItem('user'); // hapus session local
+        navigate('/'); // redirect ke halaman utama/login
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Terjadi kesalahan saat logout');
+    }
+  };
+
   return (
     <>
       <div className="max-w-7xl mx-auto">
@@ -82,10 +108,10 @@ function ProfilPage() {
                   </button>
 
                   <div className="pt-3 border-t border-gray-200">
-                    <a href="/home" className="w-full flex items-center space-x-3 p-3 hover:bg-red-50 text-red-600 rounded-lg transition-colors text-left">
+                    <button onClick={handleLogout} className="w-full flex items-center space-x-3 p-3 hover:bg-red-50 text-red-600 rounded-lg transition-colors text-left cursor-pointer">
                       <LogOut className="h-5 w-5" />
                       <span>Keluar dari Akun</span>
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>

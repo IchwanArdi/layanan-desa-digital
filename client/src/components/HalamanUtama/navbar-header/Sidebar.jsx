@@ -76,7 +76,7 @@ export default function Sidebar({ isSidebarOpen, closeSidebar, handleNavigation,
         </nav>
 
         <div className="absolute bottom-6 left-6 right-6">
-          <button onClick={handleLogout} className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 group">
+          <button onClick={handleLogout} className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 group cursor-pointer">
             <LogOut className="h-5 w-5 text-gray-500 group-hover:text-gray-700 transition-colors duration-200" />
             <span className="group-hover:text-gray-900 transition-colors duration-200">Keluar</span>
           </button>

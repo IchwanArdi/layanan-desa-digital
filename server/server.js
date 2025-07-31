@@ -33,10 +33,10 @@ app.use(
       ttl: 14 * 24 * 60 * 60,
     }),
     cookie: {
-      maxAge: 14 * 24 * 60 * 60 * 1000,
+      maxAge: 14 * 24 * 60 * 60 * 1000, // 14 hari
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
+      secure: process.env.NODE_ENV === 'production', // ✅ JANGAN pakai array
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // agar bisa lintas domain di Vercel, tapi tetap aman saat lokal
     },
   })
 );

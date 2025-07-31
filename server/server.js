@@ -45,13 +45,18 @@ app.use(
 const loginRoute = require('./routes/auth/login');
 const registerRoute = require('./routes/auth/register');
 const logoutRoute = require('./routes/auth/logout');
-const dashboardRoutes = require('./routes/protected/dashboard');
+const dashboardProtectedRoutes = require('./routes/protected/dashboard');
+const dashboardDataRoutes = require('./routes/api/dashboard');
+
 const checkAuthRoute = require('./routes/auth/checkAuth');
+
 app.use('/api', loginRoute); // semua route diawali dengan /api
 app.use('/api', registerRoute); // semua route diawali dengan /api
 app.use('/api', logoutRoute); // tambahkan route logout
-app.use('/api', dashboardRoutes); // semua mulai dari /api/dashboard akan diproteksi
+app.use('/api', dashboardProtectedRoutes); // semua mulai dari /api/dashboard akan diproteksi
 app.use('/api', checkAuthRoute); // route untuk cek autentikasi
+
+app.use('/api', dashboardDataRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

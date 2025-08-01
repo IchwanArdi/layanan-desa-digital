@@ -84,36 +84,79 @@ function DashboardPage() {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Pengajuan Dokumen */}
                 <div className="bg-white rounded-xl shadow-lg p-6">
                   <h3 className="text-gray-800 text-lg font-semibold mb-4">Pengajuan Dokumen Terbaru</h3>
-                  <div className="text-center py-4">
-                    {dashboardData?.pengajuanTerbaru?.length > 0 ? (
-                      <ul>
-                        {dashboardData.pengajuanTerbaru.map((item, index) => (
-                          <li key={index} className="text-gray-700 text-sm">
-                            {item.nama} - {item.status}
-                          </li>
-                        ))}
-                      </ul>
+                  <div className="space-y-3">
+                    {dashboardData?.pengajuanDokumenTerbaru?.length > 0 ? (
+                      dashboardData.pengajuanDokumenTerbaru.map((item, index) => {
+                        let statusClass = 'bg-gray-100 text-gray-600';
+                        let statusText = item.status;
+                        if (statusText === 'selesai') {
+                          statusClass = 'bg-green-100 text-green-600';
+                          statusText = 'Selesai';
+                        } else if (statusText === 'diproses') {
+                          statusClass = 'bg-blue-100 text-blue-600';
+                          statusText = 'Proses';
+                        } else if (statusText === 'pending') {
+                          statusClass = 'bg-gray-100 text-gray-600';
+                          statusText = 'Menunggu';
+                        }
+
+                        return (
+                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                              <p className="text-gray-800 font-medium">{item.jenisDokumen}</p>
+                              <p className="text-gray-600 text-sm">{new Date(item.createdAt).toLocaleDateString('id-ID')}</p>
+                            </div>
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusClass}`}>{statusText}</span>
+                          </div>
+                        );
+                      })
                     ) : (
-                      <p className="text-gray-500">Belum ada pengajuan dokumen</p>
+                      <div className="text-center py-4">
+                        <p className="text-gray-500">Belum ada pengajuan dokumen</p>
+                      </div>
                     )}
                   </div>
                 </div>
 
+                {/* Pengaduan */}
                 <div className="bg-white rounded-xl shadow-lg p-6">
                   <h3 className="text-gray-800 text-lg font-semibold mb-4">Pengaduan Terbaru</h3>
-                  <div className="text-center py-4">
+                  <div className="space-y-3">
                     {dashboardData?.pengaduanTerbaru?.length > 0 ? (
-                      <ul>
-                        {dashboardData.pengaduanTerbaru.map((item, index) => (
-                          <li key={index} className="text-gray-700 text-sm">
-                            {item.judul} - {item.status}
-                          </li>
-                        ))}
-                      </ul>
+                      dashboardData.pengaduanTerbaru.map((item, index) => {
+                        let statusClass = 'bg-gray-100 text-gray-600';
+                        let statusText = item.status;
+                        if (statusText === 'selesai') {
+                          statusClass = 'bg-green-100 text-green-600';
+                          statusText = 'Selesai';
+                        } else if (statusText === 'ditindaklanjuti') {
+                          statusClass = 'bg-yellow-100 text-yellow-600';
+                          statusText = 'Ditindaklanjuti';
+                        } else if (statusText === 'proses') {
+                          statusClass = 'bg-blue-100 text-blue-600';
+                          statusText = 'Proses';
+                        } else if (statusText === 'menunggu') {
+                          statusClass = 'bg-gray-100 text-gray-600';
+                          statusText = 'Menunggu';
+                        }
+
+                        return (
+                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                              <p className="text-gray-800 font-medium">{item.judul}</p>
+                              <p className="text-gray-600 text-sm">{new Date(item.createdAt).toLocaleDateString('id-ID')}</p>
+                            </div>
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusClass}`}>{statusText}</span>
+                          </div>
+                        );
+                      })
                     ) : (
-                      <p className="text-gray-500">Belum ada pengaduan</p>
+                      <div className="text-center py-4">
+                        <p className="text-gray-500">Belum ada pengaduan</p>
+                      </div>
                     )}
                   </div>
                 </div>

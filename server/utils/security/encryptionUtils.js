@@ -20,13 +20,21 @@ const decrypt = (encryptedText) => {
   if (!encryptedText || typeof encryptedText !== 'string') return encryptedText;
 
   try {
+    // Cek ciri khas string terenkripsi AES CryptoJS
+    if (!encryptedText.startsWith('U2FsdGVk')) {
+      // Mungkin belum terenkripsi, langsung balikin
+      return encryptedText;
+    }
+
     const bytes = CryptoJS.AES.decrypt(encryptedText, SECRET_KEY);
     const originalText = bytes.toString(CryptoJS.enc.Utf8);
 
-    return originalText || encryptedText; // Kalau gagal, balikin yang terenkripsi
+    if (!originalText) throw new Error('Hasil dekripsi kosong');
+
+    return originalText;
   } catch (err) {
-    console.error('Gagal mendekripsi:', err);
-    return encryptedText;
+    console.error('❌ Gagal mendekripsi:', encryptedText, '\n➡️ Error:', err.message);
+    return encryptedText; // fallback, biar tidak rusak
   }
 };
 
@@ -45,9 +53,14 @@ const encryptFields = (dataObj, fields) => {
 
 // 🔁 Dekripsi array data (dipakai untuk dashboard, dll)
 const decryptArrayData = (dataArray, decryptFunction) => {
-  return dataArray.map((item) => {
-    const itemObj = item.toObject ? item.toObject() : item;
-    return decryptFunction(itemObj);
+  return dataArray.map((item, i) => {
+    try {
+      const itemObj = item.toObject ? item.toObject() : item;
+      return decryptFunction(itemObj);
+    } catch (e) {
+      console.error(`❗ Gagal dekripsi item ke-${i}:`, item);
+      return item; // biar gak bikin crash semua
+    }
   });
 };
 

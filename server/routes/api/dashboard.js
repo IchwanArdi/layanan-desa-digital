@@ -4,6 +4,7 @@ const router = express.Router(); // Buat router modular untuk endpoint /dashboar
 const isAuthenticated = require('../../middleware/auth'); // Middleware untuk pastikan user sudah login (dengan session)
 const Pengaduan = require('../../models/Pengaduan'); // Model untuk data pengaduan dari warga
 const PengajuanDokumen = require('../../models/PengajuanDokumen'); // Model untuk data pengajuan dokumen oleh warga
+const { decryptPengajuanDokumen, decryptPengaduan, decryptArrayData } = require('../../utils/security/encryptionUtils'); // Fungsi dekripsi untuk data sensitif
 
 // Endpoint GET /dashboard → hanya bisa diakses jika user login
 router.get('/dashboard', isAuthenticated, async (req, res) => {
@@ -32,6 +33,14 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
       status: 'selesai',
     });
 
+    // Data terbaru - dekripsi untuk tampilan
+    const pengaduanTerbarulain = await Pengaduan.find({ warga: userId }).sort({ createdAt: -1 }).limit(5);
+    const pengajuanDokumenTerbarulain = await PengajuanDokumen.find({ userId: userId }).sort({ createdAt: -1 }).limit(5);
+
+    // Dekripsi data untuk tampilan
+    const pengaduanTerbaru = decryptArrayData(pengaduanTerbarulain, decryptPengaduan);
+    const pengajuanDokumenTerbaru = decryptArrayData(pengajuanDokumenTerbarulain, decryptPengajuanDokumen);
+
     // 🔹 Kirim data statistik sebagai response ke frontend
     res.json({
       nama: req.session.user.nama || 'User',
@@ -40,7 +49,7 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
       totalPengaduan,
       totalPengaduanProses,
       totalPengaduanSelesai,
-      pengaduanTerbaru: [], // (bisa diisi data terbaru nanti)
+      pengaduanTerbaru,
       totalPengaduanUser: totalPengaduan,
       totalPengaduanSelesaiUser: totalPengaduanSelesai,
       totalPengaduanProsesUser: totalPengaduanProses,
@@ -49,7 +58,8 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
       totalPengajuanDokumen,
       totalPengajuanDokumenProses,
       totalPengajuanDokumenSelesai,
-      pengajuanDokumenTerbaru: [], // (bisa diisi data terbaru nanti)
+      pengajuanDokumenTerbaru,
+
       totalPengajuanDokumenUser: totalPengajuanDokumen,
       totalPengajuanDokumenSelesaiUser: totalPengajuanDokumenSelesai,
       totalPengajuanDokumenProsesUser: totalPengajuanDokumenProses,

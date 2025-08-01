@@ -14,6 +14,7 @@ import LayananDokumenPage from './components/HalamanUtama/pages/LayananDokumenPa
 import PengajuanPage from './components/HalamanUtama/pages/PengajuanPage.jsx';
 import ProfilPage from './components/HalamanUtama/pages/ProfilPage.jsx';
 import NotFoundPage from './components/404/NotFoundPage.jsx';
+import AdminDashboard from './components/src/pages/AdminDashboard.jsx';
 import './App.css';
 
 // Clean Professional URLs
@@ -91,6 +92,10 @@ const router = createBrowserRouter([
         key: 'not-found',
       },
     ],
+  },
+  {
+    path: 'admin/dashboard',
+    element: <AdminDashboard />,
   },
 ]);
 

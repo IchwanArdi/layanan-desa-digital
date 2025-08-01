@@ -92,7 +92,7 @@ function ProfilPage() {
                         <FileText className="h-5 w-5 text-blue-600" />
                         <span className="text-sm font-medium text-blue-800">Total Pengajuan Dokumen</span>
                       </div>
-                      <span className="text-blue-600 font-bold">{dashboardData?.totalPengajuanDokumen || 0}</span>
+                      <span className="text-blue-600 font-bold">{dashboardData?.totalPengajuanDokumen ?? 0}</span>
                     </div>
 
                     <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
@@ -100,7 +100,7 @@ function ProfilPage() {
                         <MessageSquare className="h-5 w-5 text-green-600" />
                         <span className="text-sm font-medium text-green-800">Total Pengaduan</span>
                       </div>
-                      <span className="text-green-600 font-bold">{dashboardData?.totalPengaduan || 0}</span>
+                      <span className="text-green-600 font-bold">{dashboardData?.totalPengaduan ?? 0}</span>
                     </div>
 
                     <div className="flex items-center justify-between p-3 bg-purple-100 rounded-lg">
@@ -108,12 +108,11 @@ function ProfilPage() {
                         <CircleCheck className="h-5 w-5 text-purple-600" />
                         <span className="text-sm font-medium text-purple-800">Layanan Selesai</span>
                       </div>
-                      <span className="text-purple-600 font-bold">{dashboardData?.totalLayananSelesai || 0}</span>
+                      <span className="text-purple-600 font-bold">{dashboardData?.totalLayananSelesai ?? 0}</span>
                     </div>
                   </div>
                 </div>
 
-                {/*Account Settings*/}
                 {/* Account Settings */}
                 <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                   <h3 className="text-gray-800 text-lg font-semibold mb-4 flex items-center">
@@ -159,14 +158,76 @@ function ProfilPage() {
                 <div className="space-y-4">
                   {/* Riwayat Pengaduan */}
 
-                  {/* Riwayat Pengajuan Dokumen */}
+                  {dashboardData?.pengaduanTerbaru?.length > 0 ? (
+                    dashboardData.pengaduanTerbaru.map((item, index) => {
+                      let statusClass = 'bg-gray-100 text-gray-600';
+                      let statusText = item.status;
+                      if (statusText === 'selesai') {
+                        statusClass = 'bg-green-100 text-green-600';
+                        statusText = 'Selesai';
+                      } else if (statusText === 'ditindaklanjuti') {
+                        statusClass = 'bg-blue-100 text-blue-600';
+                        statusText = 'Ditindaklanjuti';
+                      } else if (statusText === 'proses') {
+                        statusClass = 'bg-yellow-100 text-yellow-600';
+                        statusText = 'Proses';
+                      } else if (statusText === 'menunggu') {
+                        statusClass = 'bg-gray-100 text-gray-600';
+                        statusText = 'Menunggu';
+                      }
 
-                  {/* Jika tidak ada aktivitas */}
-                  <div className="text-center py-8">
-                    <i data-lucide="inbox" className="h-12 w-12 text-gray-400 mx-auto mb-4"></i>
-                    <p className="text-gray-500">Belum ada aktivitas terbaru</p>
-                    <p className="text-gray-400 text-sm">Riwayat pengaduan dan pengajuan dokumen akan muncul di sini</p>
-                  </div>
+                      return (
+                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div>
+                            <p className="text-gray-800 font-bold">Pengaduan: {item.judul}</p>
+                            <p className="text-gray-600 text-sm">{new Date(item.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' })}</p>
+                          </div>
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusClass}`}>{statusText}</span>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="text-center py-8">
+                      <i data-lucide="inbox" className="h-12 w-12 text-gray-400 mx-auto mb-4"></i>
+                      <p className="text-gray-500">Belum ada aktivitas terbaru</p>
+                      <p className="text-gray-400 text-sm">Riwayat pengaduan dan pengajuan dokumen akan muncul di sini</p>
+                    </div>
+                  )}
+
+                  {/* Riwayat Pengajuan Dokumen */}
+                  {dashboardData?.pengajuanDokumenTerbaru?.length > 0 ? (
+                    dashboardData.pengajuanDokumenTerbaru.map((item, index) => {
+                      let statusClass = 'bg-gray-100 text-gray-600';
+                      let statusText = item.status;
+                      if (statusText === 'selesai') {
+                        statusClass = 'bg-green-100 text-green-600';
+                        statusText = 'Selesai';
+                      } else if (statusText === 'ditindaklanjuti') {
+                        statusClass = 'bg-blue-100 text-blue-600';
+                        statusText = 'Ditindaklanjuti';
+                      } else if (statusText === 'proses') {
+                        statusClass = 'bg-yellow-100 text-yellow-600';
+                        statusText = 'Proses';
+                      } else if (statusText === 'menunggu') {
+                        statusClass = 'bg-gray-100 text-gray-600';
+                        statusText = 'Menunggu';
+                      }
+
+                      return (
+                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div>
+                            <p className="text-gray-800 font-bold">Pengajuan Dokumen: {item.jenisDokumen}</p>
+                            <p className="text-gray-600 text-sm">{new Date(item.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' })}</p>
+                          </div>
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusClass}`}>{statusText}</span>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="text-center py-4">
+                      <p className="text-gray-500">Belum ada aktivitas terbaru</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </>

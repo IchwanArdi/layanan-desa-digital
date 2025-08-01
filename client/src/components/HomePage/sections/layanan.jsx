@@ -64,7 +64,7 @@ function Layanan() {
           {/* Grid Section - Hero Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             <div
-              className="border border-gray-700 p-6 rounded-2xl shadow-lg group hover:border-green-600 hover:border-2 transition-all duration-300 hover:bg-gray-900/50 cursor-pointer transform hover:-translate-y-1"
+              className="border border-gray-700 p-6 rounded-2xl shadow-lg group hover:border-green-600 hover:border-2 transition-all duration-300 hover:bg-gray-900/50 transform hover:-translate-y-1"
               onMouseEnter={() => setHoveredCard('dokumentasi')}
               onMouseLeave={() => setHoveredCard(null)}
             >
@@ -81,7 +81,7 @@ function Layanan() {
             </div>
 
             <div
-              className="border border-gray-700 p-6 rounded-2xl shadow-lg group hover:border-green-600 hover:border-2 transition-all duration-300 hover:bg-gray-900/50 cursor-pointer transform hover:-translate-y-1"
+              className="border border-gray-700 p-6 rounded-2xl shadow-lg group hover:border-green-600 hover:border-2 transition-all duration-300 hover:bg-gray-900/50 transform hover:-translate-y-1"
               onMouseEnter={() => setHoveredCard('pengaduan')}
               onMouseLeave={() => setHoveredCard(null)}
             >

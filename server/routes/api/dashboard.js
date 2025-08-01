@@ -1,27 +1,27 @@
 const express = require('express');
-const router = express.Router();
-const isAuthenticated = require('../../middleware/auth'); // ✅ benar
-const Pengaduan = require('../../models/Pengaduan');
-const PengajuanDokumen = require('../../models/PengajuanDokumen');
-// const { decryptPengaduan, decryptPengajuanDokumen, decryptArrayData } = require('../../utils/decryptUtils'); // jika nanti perlu
+const router = express.Router(); // Buat router modular untuk endpoint /dashboard
 
+const isAuthenticated = require('../../middleware/auth'); // Middleware untuk pastikan user sudah login (dengan session)
+const Pengaduan = require('../../models/Pengaduan'); // Model untuk data pengaduan dari warga
+const PengajuanDokumen = require('../../models/PengajuanDokumen'); // Model untuk data pengajuan dokumen oleh warga
+
+// Endpoint GET /dashboard → hanya bisa diakses jika user login
 router.get('/dashboard', isAuthenticated, async (req, res) => {
   try {
-    const userId = req.session.user._id;
-    console.log('Dashboard - User ID:', userId);
+    const userId = req.session.user._id; // Ambil ID user dari session login
 
-    // Data Pengaduan
+    // 🔹 Hitung jumlah pengaduan user
     const totalPengaduan = await Pengaduan.countDocuments({ warga: userId });
     const totalPengaduanProses = await Pengaduan.countDocuments({
       warga: userId,
-      status: { $in: ['menunggu', 'proses', 'ditindaklanjuti'] },
+      status: { $in: ['menunggu', 'proses', 'ditindaklanjuti'] }, // status belum selesai
     });
     const totalPengaduanSelesai = await Pengaduan.countDocuments({
       warga: userId,
-      status: 'selesai',
+      status: 'selesai', // status selesai
     });
 
-    // Data Pengajuan Dokumen
+    // 🔹 Hitung jumlah pengajuan dokumen user
     const totalPengajuanDokumen = await PengajuanDokumen.countDocuments({ userId });
     const totalPengajuanDokumenProses = await PengajuanDokumen.countDocuments({
       userId,
@@ -32,41 +32,35 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
       status: 'selesai',
     });
 
-    console.log('Dashboard stats:', {
-      totalPengaduan,
-      totalPengaduanProses,
-      totalPengaduanSelesai,
-      totalPengajuanDokumen,
-      totalPengajuanDokumenProses,
-      totalPengajuanDokumenSelesai,
-    });
-
+    // 🔹 Kirim data statistik sebagai response ke frontend
     res.json({
       nama: req.session.user.nama || 'User',
 
-      // Data Pengaduan
+      // Pengaduan
       totalPengaduan,
       totalPengaduanProses,
       totalPengaduanSelesai,
-      pengaduanTerbaru: [], // Tambahkan jika ingin ambil data real
+      pengaduanTerbaru: [], // (bisa diisi data terbaru nanti)
       totalPengaduanUser: totalPengaduan,
       totalPengaduanSelesaiUser: totalPengaduanSelesai,
       totalPengaduanProsesUser: totalPengaduanProses,
 
-      // Data Pengajuan Dokumen
+      // Pengajuan Dokumen
       totalPengajuanDokumen,
       totalPengajuanDokumenProses,
       totalPengajuanDokumenSelesai,
-      pengajuanDokumenTerbaru: [], // Tambahkan jika ingin ambil data real
+      pengajuanDokumenTerbaru: [], // (bisa diisi data terbaru nanti)
       totalPengajuanDokumenUser: totalPengajuanDokumen,
       totalPengajuanDokumenSelesaiUser: totalPengajuanDokumenSelesai,
       totalPengajuanDokumenProsesUser: totalPengajuanDokumenProses,
     });
   } catch (error) {
+    // 🔴 Jika ada error (misalnya database gagal), kirim data kosong agar dashboard tetap bisa ditampilkan
     console.error('Error loading dashboard:', error);
     res.status(500).json({
       nama: req.session.user?.nama || 'User',
-      // Fallback data kosong jika error
+
+      // Pengaduan kosong
       totalPengaduan: 0,
       totalPengaduanProses: 0,
       totalPengaduanSelesai: 0,
@@ -74,6 +68,8 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
       totalPengaduanUser: 0,
       totalPengaduanSelesaiUser: 0,
       totalPengaduanProsesUser: 0,
+
+      // Pengajuan Dokumen kosong
       totalPengajuanDokumen: 0,
       totalPengajuanDokumenProses: 0,
       totalPengajuanDokumenSelesai: 0,
@@ -85,4 +81,4 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = router; // Ekspor router supaya bisa dipakai di app utama

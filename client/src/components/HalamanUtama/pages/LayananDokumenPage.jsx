@@ -1,7 +1,57 @@
 import { Send, CircleAlert } from 'lucide-react';
+import { useState } from 'react';
 
 // PengajuanPage.jsx
 function PengajuanPage() {
+  const [formData, setFormData] = useState({
+    type: '',
+    name: '',
+    nik: '',
+    phone: '',
+    address: '',
+    purpose: '',
+  });
+
+  const [pesan, setPesan] = useState('');
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/pengajuan-dokumen`, {
+        method: 'POST',
+        credentials: 'include', // penting agar session dikirim
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setPesan('Pengajuan dokumen berhasil dibuat');
+        setFormData({
+          type: '',
+          name: '',
+          nik: '',
+          phone: '',
+          address: '',
+          purpose: '',
+        });
+      } else {
+        setPesan(data.message || 'Terjadi kesalahan saat mengirim pengajuan dokumen');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setPesan('Terjadi kesalahan saat mengirim pengajuan dokumen');
+    }
+  };
+
   return (
     <>
       <div className="max-w-7xl mx-auto">
@@ -10,11 +60,13 @@ function PengajuanPage() {
             <div className="bg-white rounded-xl shadow-lg p-8">
               <h2 className="text-gray-800 text-2xl font-bold mb-6">Pengajuan Dokumen Kependudukan</h2>
 
-              <form action="/dokumen" method="POST" id="documentForm" className="space-y-6">
+              {pesan && <div className="mb-4 text-sm text-blue-600">{pesan}</div>}
+
+              <form onSubmit={handleSubmit} id="documentForm" className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Jenis Dokumen</label>
-                    <select name="type" className="w-full px-4 py-3 rounded-lg border bg-white border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 transition-all duration-200" required>
+                    <select name="type" onChange={handleChange} className="w-full px-4 py-3 rounded-lg border bg-white border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 transition-all duration-200" required>
                       <option value="">Pilih jenis dokumen</option>
                       <option value="Surat Keterangan Domisili">Surat Keterangan Domisili</option>
                       <option value="Surat Pengantar KTP">Surat Pengantar KTP</option>
@@ -28,6 +80,7 @@ function PengajuanPage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
                     <input
+                      onChange={handleChange}
                       type="text"
                       name="name"
                       className="w-full px-4 py-3 rounded-lg border bg-white border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
@@ -39,6 +92,7 @@ function PengajuanPage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">NIK</label>
                     <input
+                      onChange={handleChange}
                       type="text"
                       name="nik"
                       className="w-full px-4 py-3 rounded-lg border bg-white border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
@@ -50,6 +104,7 @@ function PengajuanPage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">No. Telepon</label>
                     <input
+                      onChange={handleChange}
                       type="tel"
                       name="phone"
                       className="w-full px-4 py-3 rounded-lg border bg-white border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
@@ -62,6 +117,7 @@ function PengajuanPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Alamat Lengkap</label>
                   <textarea
+                    onChange={handleChange}
                     name="address"
                     rows="3"
                     className="w-full px-4 py-3 rounded-lg border bg-white border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 transition-all duration-200 resize-none"
@@ -73,6 +129,7 @@ function PengajuanPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Keperluan</label>
                   <textarea
+                    onChange={handleChange}
                     name="purpose"
                     rows="3"
                     className="w-full px-4 py-3 rounded-lg border bg-white border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 transition-all duration-200 resize-none"

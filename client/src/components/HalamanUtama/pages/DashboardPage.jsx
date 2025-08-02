@@ -39,7 +39,14 @@ function DashboardPage() {
         <div className="space-y-6">
           {/* Loader sementara */}
           {loading ? (
-            <p className="text-center text-gray-500">Memuat data dashboard...</p>
+            <div className="flex items-center justify-center py-12">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                <span className="ml-3 text-slate-600">Memuat data dashboard...</span>
+              </div>
+            </div>
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

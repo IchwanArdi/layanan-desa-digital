@@ -43,15 +43,9 @@ function PengajuanPage() {
       const data = await res.json();
 
       if (res.ok) {
-        setPesan('Pengajuan dokumen berhasil dibuat');
-        setFormData({
-          type: '',
-          name: '',
-          nik: '',
-          phone: '',
-          address: '',
-          purpose: '',
-        });
+        setPesan('✅ Pengajuan dokumen berhasil dibuat!');
+        setFormData({ type: '', name: '', nik: '', phone: '', address: '', purpose: '' });
+        setTimeout(() => setPesan(''), 5000);
       } else {
         setPesan(data.message || 'Terjadi kesalahan saat mengirim pengajuan dokumen');
       }
@@ -84,9 +78,18 @@ function PengajuanPage() {
               </>
             ) : (
               <>
-                <h2 className="text-gray-800 text-2xl font-bold mb-6">Pengajuan Dokumen Kependudukan</h2>
-
-                {pesan && <div className="mb-4 text-sm text-blue-600">{pesan}</div>}
+                {/* Tampilkan pesan jika ada */}
+                {pesan && (
+                  <div className="mb-6 p-4 rounded-lg border border-green-200 bg-green-50 text-green-800 flex items-start space-x-3 shadow-sm">
+                    <svg className="h-5 w-5 mt-0.5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <div className="flex-1 text-sm font-medium">
+                      {pesan}
+                      <div className="text-xs mt-1 text-green-700">Kami akan memproses pengajuan Anda secepatnya. Silakan cek halaman dashboard.</div>
+                    </div>
+                  </div>
+                )}
 
                 <form onSubmit={handleSubmit} id="documentForm" className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

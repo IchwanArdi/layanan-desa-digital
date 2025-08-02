@@ -6,6 +6,9 @@ function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState(null);
 
+  // Di atas component DashboardPage
+  const SkeletonBox = ({ className }) => <div className={`bg-gray-200 rounded-md animate-pulse ${className}`}></div>;
+
   useEffect(() => {
     const fetchDashboard = async () => {
       setLoading(true);
@@ -39,14 +42,36 @@ function DashboardPage() {
         <div className="space-y-6">
           {/* Loader sementara */}
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                <span className="ml-3 text-slate-600">Memuat data dashboard...</span>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="bg-white rounded-xl shadow p-6">
+                    <SkeletonBox className="w-20 h-4 mb-2" />
+                    <SkeletonBox className="w-24 h-6 mb-2" />
+                    <SkeletonBox className="w-32 h-3" />
+                  </div>
+                ))}
               </div>
-            </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                {[...Array(2)].map((_, i) => (
+                  <div key={i} className="bg-white rounded-xl shadow p-6">
+                    <SkeletonBox className="w-40 h-5 mb-4" />
+                    <div className="space-y-3">
+                      {[...Array(3)].map((_, j) => (
+                        <div key={j} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                          <div>
+                            <SkeletonBox className="w-28 h-4 mb-1" />
+                            <SkeletonBox className="w-20 h-3" />
+                          </div>
+                          <SkeletonBox className="w-16 h-5 rounded-full" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

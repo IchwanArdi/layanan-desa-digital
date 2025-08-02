@@ -10,6 +10,8 @@ function ProfilPage() {
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState(null);
 
+  const SkeletonBox = ({ className }) => <div className={`bg-gray-200 rounded-md animate-pulse ${className}`}></div>;
+
   useEffect(() => {
     const fetchDashboard = async () => {
       setLoading(true);
@@ -60,8 +62,58 @@ function ProfilPage() {
     <div className="max-w-7xl mx-auto">
       <div id="profile-content" className="tab-content">
         <div className="max-w-4xl mx-auto">
+          {/* Loader sementara */}
           {loading ? (
-            <p className="text-center text-gray-500">Memuat data profil...</p>
+            <>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Skeleton kartu profil */}
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                  <div className="text-center space-y-4">
+                    <SkeletonBox className="w-20 h-20 rounded-full mx-auto" />
+                    <SkeletonBox className="w-32 h-5 mx-auto" />
+                    <SkeletonBox className="w-40 h-4 mx-auto" />
+                    <SkeletonBox className="w-48 h-6 mx-auto mt-4" />
+                  </div>
+                </div>
+
+                {/* Skeleton statistik */}
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                  <SkeletonBox className="w-32 h-5 mb-4" />
+                  <div className="space-y-4">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                        <SkeletonBox className="w-36 h-4" />
+                        <SkeletonBox className="w-10 h-4" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Skeleton pengaturan akun */}
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                  <SkeletonBox className="w-40 h-5 mb-4" />
+                  <div className="space-y-3">
+                    {[...Array(5)].map((_, i) => (
+                      <SkeletonBox key={i} className="w-full h-10" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Skeleton riwayat aktivitas */}
+              <div className="bg-white rounded-xl shadow-lg p-6 mt-6 space-y-4">
+                <SkeletonBox className="w-60 h-5 mb-4" />
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <SkeletonBox className="w-52 h-4 mb-1" />
+                      <SkeletonBox className="w-36 h-3" />
+                    </div>
+                    <SkeletonBox className="w-16 h-5 rounded-full" />
+                  </div>
+                ))}
+              </div>
+            </>
           ) : (
             <>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

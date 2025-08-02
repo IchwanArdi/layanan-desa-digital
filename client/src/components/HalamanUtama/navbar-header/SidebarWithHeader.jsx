@@ -10,6 +10,7 @@ function SidebarWithHeader() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const userName = JSON.parse(localStorage.getItem('user')); // Ambil data user dari localStorage
+  const email = userName ? userName.email : 'email@gmail.com'; // Ambil email dari data user
   const userNameDisplay = userName ? userName.nama : 'Pengguna'; // Tampilkan nama pengguna atau default
 
   const getSectionFromPath = (pathname) => {
@@ -48,7 +49,7 @@ function SidebarWithHeader() {
 
   return (
     <>
-      <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} userName={userNameDisplay} />
+      <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} userName={userNameDisplay} email={email} />
       <Sidebar isSidebarOpen={isSidebarOpen} closeSidebar={() => setIsSidebarOpen(false)} handleNavigation={handleNavigation} currentSection={currentSection} />
     </>
   );

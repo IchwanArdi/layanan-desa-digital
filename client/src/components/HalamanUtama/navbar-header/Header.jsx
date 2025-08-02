@@ -1,11 +1,11 @@
 // components/Layout/Header.jsx
-import { LogOut, Menu, User, Moon } from 'lucide-react';
+import { LogOut, Menu, User, Moon, Settings } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-export default function Header({ toggleSidebar, userName }) {
+export default function Header({ toggleSidebar, userName, email }) {
   const navigate = useNavigate(); // untuk navigasi ke halaman lain
   // Fungsi untuk menangani logout
   const handleLogout = async () => {
@@ -81,11 +81,43 @@ export default function Header({ toggleSidebar, userName }) {
 
             {/* Dropdown */}
             {profilOpen && (
-              <div className="absolute right-0 mt-2 w-48 top-13 bg-white shadow-lg rounded-xl py-3 px-4 z-50">
-                <p className="text-sm text-gray-800 font-medium mb-2">Halo, {userName}!</p>
-                <hr className="border-gray-200 mb-2" />
-                <button onClick={handleLogout} className="flex items-center text-sm text-red-600 hover:text-red-800 transition-colors gap-2 w-full cursor-pointer">
-                  <LogOut className="w-4 h-4" />
+              <div className="absolute right-0 mt-2 w-52 top-13 bg-white shadow-xl rounded-2xl py-4 px-5 z-50 border border-gray-100">
+                {/* Bagian Header */}
+                <div className="mb-3 mx-2">
+                  <p className="text-md text-gray-900 font-semibold">Halo, {userName}!</p>
+                  <p className="text-xs text-gray-500 truncate">{email}</p>
+                </div>
+                <hr className="border-gray-200 mb-3" />
+
+                {/* Menu Item */}
+                <div className="flex flex-col space-y-2 mb-3">
+                  <button
+                    className="flex items-center text-sm text-gray-700 hover:bg-gray-100 px-2 py-1.5 rounded-lg transition"
+                    onClick={() => {
+                      navigate('/dashboard/profil');
+                      setProfilOpen(false);
+                    }}
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Profil Saya
+                  </button>
+
+                  <button
+                    className="flex items-center text-sm text-gray-700 hover:bg-gray-100 px-2 py-1.5 rounded-lg transition"
+                    onClick={() => {
+                      toast.info('Fitur pengaturan akan segera tersedia');
+                    }}
+                  >
+                    <Settings className="w-4 h-4 mr-2" />
+                    Pengaturan
+                  </button>
+                </div>
+
+                <hr className="border-gray-200 mb-3" />
+
+                {/* Tombol Logout */}
+                <button onClick={handleLogout} className="flex items-center text-sm text-red-600 hover:text-red-700 hover:bg-red-50 px-2 py-1.5 rounded-lg transition w-full">
+                  <LogOut className="w-4 h-4 mr-2" />
                   Keluar
                 </button>
               </div>

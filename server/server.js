@@ -46,9 +46,11 @@ const loginRoute = require('./routes/auth/login');
 const registerRoute = require('./routes/auth/register');
 const logoutRoute = require('./routes/auth/logout');
 const dashboardProtectedRoutes = require('./routes/protected/dashboard');
-const dashboardDataRoutes = require('./routes/api/dashboard');
 
-const checkAuthRoute = require('./routes/auth/checkAuth');
+const checkAuthRoute = require('./routes/auth/checkAuth'); // route untuk cek autentikasi
+const dashboardDataRoutes = require('./routes/api/dashboard'); // route untuk data dashboard
+const pengaduanDataRoute = require('./routes/api/pengaduan'); // route untuk pengaduan
+const ajukanDataRoute = require('./routes/api/ajukanData'); // route untuk pengajuan dokumen
 
 app.use('/api', loginRoute); // semua route diawali dengan /api
 app.use('/api', registerRoute); // semua route diawali dengan /api
@@ -57,6 +59,8 @@ app.use('/api', dashboardProtectedRoutes); // semua mulai dari /api/dashboard ak
 app.use('/api', checkAuthRoute); // route untuk cek autentikasi
 
 app.use('/api', dashboardDataRoutes);
+app.use('/api', pengaduanDataRoute);
+app.use('/api', ajukanDataRoute);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

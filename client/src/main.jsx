@@ -15,6 +15,7 @@ import PengajuanPage from './components/HalamanUtama/pages/PengajuanPage.jsx';
 import ProfilPage from './components/HalamanUtama/pages/ProfilPage.jsx';
 import NotFoundPage from './components/404/NotFoundPage.jsx';
 import AdminDashboard from './components/src/pages/AdminDashboard.jsx';
+import { SettingsProvider } from './contexts/SettingsContext.jsx';
 import './App.css';
 
 // Clean Professional URLs
@@ -101,7 +102,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
-    <ToastContainer position="top-right" autoClose={3000} theme="dark" />
+    <SettingsProvider>
+      <RouterProvider router={router} />
+      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
+    </SettingsProvider>
   </StrictMode>
 );

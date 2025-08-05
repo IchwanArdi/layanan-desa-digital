@@ -14,7 +14,7 @@ import LayananDokumenPage from './components/HalamanUtama/pages/LayananDokumenPa
 import PengajuanPage from './components/HalamanUtama/pages/PengajuanPage.jsx';
 import ProfilPage from './components/HalamanUtama/pages/ProfilPage.jsx';
 import NotFoundPage from './components/404/NotFoundPage.jsx';
-import AdminDashboard from './components/src/pages/AdminDashboard.jsx';
+import AdminPage from './pages/AdminPage.jsx'; // Halaman Admin
 import { SettingsProvider } from './contexts/SettingsContext.jsx';
 import './App.css';
 
@@ -95,8 +95,8 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: 'admin/dashboard',
-    element: <AdminDashboard />,
+    path: '/admin/dashboard',
+    element: <AdminPage />,
   },
 ]);
 

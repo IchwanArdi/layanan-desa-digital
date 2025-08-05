@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import StatCard from '../components/StatCard';
+import StatCard from '../components/Admin/StatCard';
 import { FaFileAlt, FaBullhorn } from 'react-icons/fa';
 
-const AdminDashboard = () => {
+const AdminPage = () => {
   const [dashboardData, setDashboardData] = useState(null);
 
   const fetchData = async () => {
@@ -100,4 +100,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default AdminPage;

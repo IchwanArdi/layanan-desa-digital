@@ -24,9 +24,12 @@ export default function LoginPage() {
       if (response.ok) {
         toast.success(result.message);
         localStorage.setItem('user', JSON.stringify(result.user));
-        navigate('/dashboard');
-      } else {
-        toast.error(result.message);
+
+        if (result.user.role === 'admin') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/dashboard');
+        }
       }
     } catch (error) {
       console.error('Error saat login:', error);

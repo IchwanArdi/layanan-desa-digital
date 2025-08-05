@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'; // impor CSS notifikasi
 import ProtectedRoute from './components/HalamanUtama/Utils/ProtectedRoute.jsx'; // untuk proteksi route
 import IndexHomePage from './components/HomePage/index.jsx';
 import IndexDesaDigital from './components/DesaDigital/index.jsx';
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
 import LoginPage from './components/Login/LoginPage.jsx';
 import RegisterPage from './components/Login/RegisterPage.jsx';
 import IndexHalamanUtama from './components/HalamanUtama/Index.jsx';
@@ -15,6 +15,7 @@ import PengajuanPage from './components/HalamanUtama/pages/PengajuanPage.jsx';
 import ProfilPage from './components/HalamanUtama/pages/ProfilPage.jsx';
 import NotFoundPage from './components/404/NotFoundPage.jsx';
 import AdminPage from './pages/AdminPage.jsx'; // Halaman Admin
+import AdminLayout from './layouts/AdminLayout.jsx'; // Layout untuk Admin
 import { SettingsProvider } from './contexts/SettingsContext.jsx';
 import './App.css';
 
@@ -94,9 +95,37 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  // Admin Routes - Clean URLs
   {
-    path: '/admin/dashboard',
-    element: <AdminPage />,
+    path: '/admin',
+    element: (
+      <ProtectedRoute>
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <AdminPage />,
+      },
+      {
+        path: 'pengajuan',
+        element: <div>Halaman Pengajuan Admin</div>, // ganti dengan komponen sesungguhnya
+      },
+      {
+        path: 'data',
+        element: <div>Halaman Data Admin</div>,
+      },
+      {
+        path: 'pengaduan',
+        element: <div>Halaman Pengaduan Admin</div>,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
+      },
+    ],
   },
 ]);
 

@@ -18,6 +18,7 @@ router.post('/login', async (req, res) => {
       _id: user._id,
       nama: user.nama,
       email: user.email,
+      role: user.role, // Tambahkan role ke session
     };
 
     return res.status(200).json({

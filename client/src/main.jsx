@@ -16,6 +16,7 @@ import ProfilPage from './components/HalamanUtama/pages/ProfilPage.jsx';
 import NotFoundPage from './components/404/NotFoundPage.jsx';
 import AdminPage from './pages/AdminPage.jsx'; // Halaman Admin
 import AdminLayout from './layouts/AdminLayout.jsx'; // Layout untuk Admin
+import AdminTotalPengaduan from './pages/AdminTotalPengaduan.jsx'; // Halaman Total Pengaduan Admin
 import { SettingsProvider } from './contexts/SettingsContext.jsx';
 import './App.css';
 
@@ -111,7 +112,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'pengajuan',
-        element: <div>Halaman Pengajuan Admin</div>, // ganti dengan komponen sesungguhnya
+        element: <AdminTotalPengaduan />,
       },
       {
         path: 'data',

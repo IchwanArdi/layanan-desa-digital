@@ -18,7 +18,7 @@ connectDB();
 app.use(express.json());
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://layanan-desa-digital.vercel.app'], // frontend
+    origin: ['http://localhost:5173', 'https://layanandesa.vercel.app'], // frontend
     credentials: true,
   })
 );

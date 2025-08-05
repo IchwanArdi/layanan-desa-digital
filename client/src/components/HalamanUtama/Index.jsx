@@ -3,10 +3,14 @@ import { useEffect } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import SidebarWithHeader from './navbar-header/SidebarWithHeader.jsx';
 import 'aos/dist/aos.css';
+import { useSettings } from '../../contexts/SettingsContext.jsx'; // Import context untuk dark mode
 
 export default function IndexHalamanUtama() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
+
+  // Ambil state darkMode dari context
+  const { darkMode } = useSettings();
 
   useEffect(() => {
     if (!user) {
@@ -21,7 +25,7 @@ export default function IndexHalamanUtama() {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50">
+      <div className={`min-h-screen ${darkMode ? 'bg-slate-950' : 'bg-gray-50'}`}>
         <SidebarWithHeader />
 
         {/* Main Content */}

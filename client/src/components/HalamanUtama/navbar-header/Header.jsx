@@ -65,69 +65,111 @@ export default function Header({ toggleSidebar, userName, email }) {
   }, []);
 
   return (
-    <header className={` ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-800'} shadow-sm border-b border-gray-200 sticky top-0 z-30 lg:ml-64`}>
+    <header className={`${darkMode ? 'bg-slate-800 text-slate-100 border-slate-700' : 'bg-white text-gray-800 border-gray-200'} shadow-sm border-b sticky top-0 z-30 lg:ml-64`}>
       <div className="flex items-center justify-between px-6 py-4 relative">
         {/* Kiri: Sidebar toggle & judul halaman */}
         <div className="flex items-center space-x-4">
-          <button onClick={toggleSidebar} className="lg:hidden p-2 rounded-lg" aria-label="Toggle Sidebar">
-            <Menu className={`${darkMode ? 'text-gray-100' : 'text-gray-600'} h-5 w-5`} />
+          <button onClick={toggleSidebar} className={`lg:hidden p-2 rounded-lg transition-colors duration-200 ${darkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'}`} aria-label="Toggle Sidebar">
+            <Menu className={`${darkMode ? 'text-slate-300' : 'text-gray-600'} h-5 w-5`} />
           </button>
-          {darkMode ? <h1 className="text-xl font-semibold text-gray-100">{pageTitle}</h1> : <h1 className="text-xl font-semibold text-gray-800">{pageTitle}</h1>}
+          <h1 className={`text-xl font-semibold ${darkMode ? 'text-slate-100' : 'text-gray-800'}`}>{pageTitle}</h1>
         </div>
 
         {/* Kanan: Theme toggle & profil */}
-        <div className="flex items-center gap-x-4">
-          <button onClick={toggleDarkMode} className={` ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100 '} p-2 rounded-lg transition-all duration-200 cursor-pointer`}>
-            {darkMode ? <Sun className="w-5 h-5 text-gray-100" /> : <Moon className="w-5 h-5 text-gray-600" />}
+        <div className="flex items-center gap-x-3">
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleDarkMode}
+            className={`p-2.5 rounded-lg transition-all duration-200 group ${darkMode ? 'hover:bg-slate-700 bg-slate-700/50' : 'hover:bg-gray-100 bg-gray-50'}`}
+            title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {darkMode ? <Sun className="w-5 h-5 text-amber-400 group-hover:text-amber-300 transition-colors duration-200" /> : <Moon className="w-5 h-5 text-slate-600 group-hover:text-slate-700 transition-colors duration-200" />}
           </button>
 
-          {/* Profil Button */}
+          {/* Profile Button */}
           <div className="relative" ref={dropdownRef}>
-            <button onClick={() => setProfilOpen(!profilOpen)} className={` ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100 '} p-2 rounded-lg transition-all duration-200 cursor-pointer`}>
-              {darkMode ? <User className="h-5 w-5 text-gray-100" /> : <User className="h-5 w-5 text-gray-700" />}
+            <button
+              onClick={() => setProfilOpen(!profilOpen)}
+              className={`p-2.5 rounded-lg transition-all duration-200 group relative ${darkMode ? 'hover:bg-slate-700 bg-slate-700/50' : 'hover:bg-gray-100 bg-gray-50'}`}
+              title="Profile Menu"
+            >
+              <User className={`h-5 w-5 ${darkMode ? 'text-slate-300 group-hover:text-slate-100' : 'text-gray-600 group-hover:text-gray-700'} transition-colors duration-200`} />
+              {profilOpen && <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${darkMode ? 'bg-emerald-400' : 'bg-emerald-500'} animate-pulse`}></div>}
             </button>
 
-            {/* Dropdown */}
+            {/* Dropdown Menu */}
             {profilOpen && (
-              <div className={`absolute right-0 mt-2 w-52 top-13 shadow-xl rounded-2xl py-4 px-5 z-50 border ${darkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-100'}`}>
-                {/* Bagian Header */}
-                <div className="mb-3 mx-2">
-                  <p className={`text-md font-semibold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>Halo, {userName}!</p>
-                  <p className={`text-xs truncate ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{email}</p>
+              <div
+                className={`absolute right-0 mt-3 w-64 shadow-2xl rounded-2xl py-4 px-2 z-50 border backdrop-blur-sm transition-all duration-200 transform origin-top-right ${
+                  darkMode ? 'bg-slate-900/95 border-slate-700 shadow-slate-900/50' : 'bg-white/95 border-gray-200 shadow-gray-900/10'
+                }`}
+              >
+                {/* User Info Header */}
+                <div className="px-4 py-3 mb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${darkMode ? 'bg-slate-700' : 'bg-gray-100'}`}>
+                      <User className={`w-5 h-5 ${darkMode ? 'text-slate-400' : 'text-gray-600'}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm font-semibold ${darkMode ? 'text-slate-100' : 'text-gray-900'} truncate`}>Halo, {userName}!</p>
+                      <p className={`text-xs ${darkMode ? 'text-slate-400' : 'text-gray-500'} truncate`}>{email}</p>
+                    </div>
+                  </div>
                 </div>
-                <hr className={`${darkMode ? 'border-gray-700' : 'border-gray-200'} mb-3`} />
 
-                {/* Menu Item */}
-                <div className="flex flex-col space-y-2 mb-3">
+                {/* Divider */}
+                <div className={`h-px mx-4 mb-3 ${darkMode ? 'bg-slate-700' : 'bg-gray-200'}`}></div>
+
+                {/* Menu Items */}
+                <div className="px-2 space-y-1 mb-3">
                   <button
-                    className={`flex items-center text-sm px-2 py-1.5 rounded-lg transition ${darkMode ? 'text-gray-100 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'}`}
+                    className={`w-full flex items-center text-sm px-3 py-2.5 rounded-lg transition-all duration-200 group ${
+                      darkMode ? 'text-slate-300 hover:bg-slate-800 hover:text-slate-100' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
                     onClick={() => {
                       navigate('/dashboard/profil');
                       setProfilOpen(false);
                     }}
                   >
-                    <User className="w-4 h-4 mr-2" />
-                    Profil Saya
+                    <User className={`w-4 h-4 mr-3 ${darkMode ? 'text-slate-400 group-hover:text-slate-300' : 'text-gray-500 group-hover:text-gray-600'} transition-colors duration-200`} />
+                    <span>Profil Saya</span>
                   </button>
 
                   <button
-                    className={`flex items-center text-sm px-2 py-1.5 rounded-lg transition ${darkMode ? 'text-gray-100 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'}`}
+                    className={`w-full flex items-center text-sm px-3 py-2.5 rounded-lg transition-all duration-200 group ${
+                      darkMode ? 'text-slate-300 hover:bg-slate-800 hover:text-slate-100' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
                     onClick={() => {
-                      toast.info('Fitur pengaturan akan segera tersedia');
+                      toast.info('Fitur pengaturan akan segera tersedia', {
+                        position: 'top-right',
+                        theme: darkMode ? 'dark' : 'light',
+                      });
+                      setProfilOpen(false);
                     }}
                   >
-                    <Settings className="w-4 h-4 mr-2" />
-                    Pengaturan
+                    <Settings className={`w-4 h-4 mr-3 ${darkMode ? 'text-slate-400 group-hover:text-slate-300' : 'text-gray-500 group-hover:text-gray-600'} transition-colors duration-200`} />
+                    <span>Pengaturan</span>
                   </button>
                 </div>
 
-                <hr className={`${darkMode ? 'border-gray-700' : 'border-gray-200'} mb-3`} />
+                {/* Divider */}
+                <div className={`h-px mx-4 mb-3 ${darkMode ? 'bg-slate-700' : 'bg-gray-200'}`}></div>
 
-                {/* Tombol Logout */}
-                <button onClick={handleLogout} className={`flex items-center text-sm hover:text-red-700 px-2 py-1.5 rounded-lg transition w-full ${darkMode ? 'text-red-400 hover:bg-red-200' : 'text-red-600 hover:bg-red-50'}`}>
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Keluar
-                </button>
+                {/* Logout Button */}
+                <div className="px-2">
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setProfilOpen(false);
+                    }}
+                    className={`w-full flex items-center text-sm px-3 py-2.5 rounded-lg transition-all duration-200 group ${
+                      darkMode ? 'text-red-400 hover:bg-red-500/10 hover:text-red-300' : 'text-red-600 hover:bg-red-50 hover:text-red-700'
+                    }`}
+                  >
+                    <LogOut className={`w-4 h-4 mr-3 ${darkMode ? 'text-red-400 group-hover:text-red-300' : 'text-red-500 group-hover:text-red-600'} transition-colors duration-200`} />
+                    <span>Keluar</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>

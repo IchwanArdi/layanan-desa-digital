@@ -9,85 +9,64 @@ const { decryptPengajuanDokumen, decryptPengaduan, decryptArrayData } = require(
 // Endpoint GET /dashboard → hanya bisa diakses jika user login
 router.get('/dashboard', isAuthenticated, async (req, res) => {
   try {
-    const userId = req.session.user._id; // Ambil ID user dari session login
+    const userId = req.session.user._id;
+    const isAdmin = req.session.user.role === 'admin';
 
-    // 🔹 Hitung jumlah pengaduan user
-    const totalPengaduan = await Pengaduan.countDocuments({ warga: userId });
+    // 🔹 Filter query: jika admin ambil semua, jika user ambil miliknya saja
+    const pengaduanQuery = isAdmin ? {} : { warga: userId };
+    const pengajuanQuery = isAdmin ? {} : { userId };
+
+    // 🔹 Hitung total pengaduan
+    const totalPengaduan = await Pengaduan.countDocuments(pengaduanQuery);
     const totalPengaduanProses = await Pengaduan.countDocuments({
-      warga: userId,
-      status: { $in: ['menunggu', 'proses', 'ditindaklanjuti'] }, // status belum selesai
+      ...pengaduanQuery,
+      status: { $in: ['menunggu', 'proses', 'ditindaklanjuti'] },
     });
     const totalPengaduanSelesai = await Pengaduan.countDocuments({
-      warga: userId,
-      status: 'selesai', // status selesai
-    });
-
-    // 🔹 Hitung jumlah pengajuan dokumen user
-    const totalPengajuanDokumen = await PengajuanDokumen.countDocuments({ userId });
-    const totalPengajuanDokumenProses = await PengajuanDokumen.countDocuments({
-      userId,
-      status: { $in: ['pending', 'diproses'] },
-    });
-    const totalPengajuanDokumenSelesai = await PengajuanDokumen.countDocuments({
-      userId,
+      ...pengaduanQuery,
       status: 'selesai',
     });
 
-    // Data terbaru - dekripsi untuk tampilan
-    const pengaduanTerbarulain = await Pengaduan.find({ warga: userId }).sort({ createdAt: -1 }).limit(5);
-    const pengajuanDokumenTerbarulain = await PengajuanDokumen.find({ userId: userId }).sort({ createdAt: -1 }).limit(5);
+    // 🔹 Hitung total pengajuan dokumen
+    const totalPengajuanDokumen = await PengajuanDokumen.countDocuments(pengajuanQuery);
+    const totalPengajuanDokumenProses = await PengajuanDokumen.countDocuments({
+      ...pengajuanQuery,
+      status: { $in: ['pending', 'diproses'] },
+    });
+    const totalPengajuanDokumenSelesai = await PengajuanDokumen.countDocuments({
+      ...pengajuanQuery,
+      status: 'selesai',
+    });
 
-    // Dekripsi data untuk tampilan
-    const pengaduanTerbaru = decryptArrayData(pengaduanTerbarulain, decryptPengaduan);
-    const pengajuanDokumenTerbaru = decryptArrayData(pengajuanDokumenTerbarulain, decryptPengajuanDokumen);
+    // 🔹 Ambil data terbaru
+    const pengaduanTerbaruRaw = await Pengaduan.find(pengaduanQuery).sort({ createdAt: -1 }).limit(5);
+    const pengajuanDokumenTerbaruRaw = await PengajuanDokumen.find(pengajuanQuery).sort({ createdAt: -1 }).limit(5);
 
-    // 🔹 Kirim data statistik sebagai response ke frontend
+    // 🔹 Dekripsi data
+    const pengaduanTerbaru = decryptArrayData(pengaduanTerbaruRaw, decryptPengaduan);
+    const pengajuanDokumenTerbaru = decryptArrayData(pengajuanDokumenTerbaruRaw, decryptPengajuanDokumen);
+
+    // 🔹 Kirim ke frontend
     res.json({
-      nama: req.session.user.nama || 'User',
+      nama: req.session.user.nama,
+      role: req.session.user.role,
+      isAdmin,
 
       // Pengaduan
       totalPengaduan,
       totalPengaduanProses,
       totalPengaduanSelesai,
       pengaduanTerbaru,
-      totalPengaduanUser: totalPengaduan,
-      totalPengaduanSelesaiUser: totalPengaduanSelesai,
-      totalPengaduanProsesUser: totalPengaduanProses,
 
-      // Pengajuan Dokumen
+      // Pengajuan
       totalPengajuanDokumen,
       totalPengajuanDokumenProses,
       totalPengajuanDokumenSelesai,
       pengajuanDokumenTerbaru,
-
-      totalPengajuanDokumenUser: totalPengajuanDokumen,
-      totalPengajuanDokumenSelesaiUser: totalPengajuanDokumenSelesai,
-      totalPengajuanDokumenProsesUser: totalPengajuanDokumenProses,
     });
   } catch (error) {
-    // 🔴 Jika ada error (misalnya database gagal), kirim data kosong agar dashboard tetap bisa ditampilkan
     console.error('Error loading dashboard:', error);
-    res.status(500).json({
-      nama: req.session.user?.nama || 'User',
-
-      // Pengaduan kosong
-      totalPengaduan: 0,
-      totalPengaduanProses: 0,
-      totalPengaduanSelesai: 0,
-      pengaduanTerbaru: [],
-      totalPengaduanUser: 0,
-      totalPengaduanSelesaiUser: 0,
-      totalPengaduanProsesUser: 0,
-
-      // Pengajuan Dokumen kosong
-      totalPengajuanDokumen: 0,
-      totalPengajuanDokumenProses: 0,
-      totalPengajuanDokumenSelesai: 0,
-      pengajuanDokumenTerbaru: [],
-      totalPengajuanDokumenUser: 0,
-      totalPengajuanDokumenSelesaiUser: 0,
-      totalPengajuanDokumenProsesUser: 0,
-    });
+    res.status(500).json({ message: 'Gagal memuat dashboard' });
   }
 });
 

@@ -1,13 +1,15 @@
 // components/Layout/Sidebar.jsx
-import logo from '../../../assets/logo.png';
+import icon from '../../../assets/icon.png';
 import { navItems } from './data';
 import { Home, FileText, MessageSquare, User, LogOut, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useSettings } from '../../../contexts/SettingsContext';
 
 export default function Sidebar({ isSidebarOpen, closeSidebar, handleNavigation, currentSection }) {
-  const navigate = useNavigate(); // untuk navigasi ke halaman lain
-  // Fungsi untuk menangani logout
+  const navigate = useNavigate();
+  const { darkMode } = useSettings();
+
   const handleLogout = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/logout`, {
@@ -19,8 +21,8 @@ export default function Sidebar({ isSidebarOpen, closeSidebar, handleNavigation,
 
       if (response.ok) {
         toast.success(result.message);
-        localStorage.removeItem('user'); // hapus session local
-        navigate('/'); // redirect ke halaman utama/login
+        localStorage.removeItem('user');
+        navigate('/');
       } else {
         toast.error(result.message);
       }
@@ -42,21 +44,26 @@ export default function Sidebar({ isSidebarOpen, closeSidebar, handleNavigation,
 
   return (
     <>
-      <div className={`fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeSidebar} />
+      <div className={`${darkMode ? 'fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-300' : ''} ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeSidebar} />
 
-      <div className={`fixed inset-y-0 left-0 z-50 w-72 sm:w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`} id="sidebar">
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-72 sm:w-64 ${darkMode ? 'bg-gray-900' : 'bg-white'} shadow-xl transform transition-transform duration-300 ease-in-out ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } lg:translate-x-0`}
+        id="sidebar"
+      >
+        <div className={`flex items-center justify-between p-6 border-b ${darkMode ? 'border-gray-800' : 'border-gray-200'}`}>
           <div className="flex items-center space-x-3">
             <div className="w-13 h-13 rounded-full flex items-center justify-center">
-              <img src={logo} alt="Logo" />
+              <img src={icon} alt="Logo" />
             </div>
             <div>
-              <h2 className="font-bold text-gray-800">Karangpucung</h2>
-              <p className="text-sm text-gray-600">Portal Desa</p>
+              <h2 className={`${darkMode ? 'text-gray-100' : 'text-gray-800'} font-bold`}>Karangpucung</h2>
+              <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>Portal Desa</p>
             </div>
           </div>
-          <button onClick={closeSidebar} className="lg:hidden p-1 rounded-lg hover:bg-gray-100 transition-colors duration-200" aria-label="Close Sidebar">
-            <X size={20} className="text-gray-600" />
+          <button onClick={closeSidebar} className={`lg:hidden p-1 rounded-lg transition-colors duration-200 ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`} aria-label="Close Sidebar">
+            <X size={20} className={darkMode ? 'text-gray-300' : 'text-gray-600'} />
           </button>
         </div>
 
@@ -66,19 +73,34 @@ export default function Sidebar({ isSidebarOpen, closeSidebar, handleNavigation,
               key={item.key}
               onClick={() => handleNavigation(item.key)}
               className={`w-full flex items-center space-x-3 px-6 py-4 transition-all duration-200 text-left group ${
-                currentSection === item.key ? 'bg-green-100 text-green-600 border-r-4 border-green-600' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer'
+                currentSection === item.key
+                  ? darkMode
+                    ? 'bg-green-900 text-green-400 border-r-4 border-green-400'
+                    : 'bg-green-100 text-green-600 border-r-4 border-green-600'
+                  : darkMode
+                  ? 'text-gray-300 hover:bg-gray-800 hover:text-gray-100 cursor-pointer'
+                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer'
               }`}
             >
-              <div className={`transition-colors duration-200 ${currentSection === item.key ? 'text-green-600' : 'text-gray-500 group-hover:text-gray-700'}`}>{getIconComponent(item.icon)}</div>
+              <div
+                className={`transition-colors duration-200 ${
+                  currentSection === item.key ? (darkMode ? 'text-green-400' : 'text-green-600') : darkMode ? 'text-gray-400 group-hover:text-gray-200' : 'text-gray-500 group-hover:text-gray-700'
+                }`}
+              >
+                {getIconComponent(item.icon)}
+              </div>
               <span className="font-medium">{item.label}</span>
             </button>
           ))}
         </nav>
 
         <div className="absolute bottom-6 left-6 right-6">
-          <button onClick={handleLogout} className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 group cursor-pointer">
-            <LogOut className="h-5 w-5 text-gray-500 group-hover:text-gray-700 transition-colors duration-200" />
-            <span className="group-hover:text-gray-900 transition-colors duration-200">Keluar</span>
+          <button
+            onClick={handleLogout}
+            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 group cursor-pointer ${darkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'}`}
+          >
+            <LogOut className={`h-5 w-5 transition-colors duration-200 ${darkMode ? 'text-gray-400 group-hover:text-gray-200' : 'text-gray-500 group-hover:text-gray-700'}`} />
+            <span className={`group-hover:transition-colors duration-200 ${darkMode ? 'group-hover:text-gray-100' : 'group-hover:text-gray-900'}`}>Keluar</span>
           </button>
         </div>
       </div>

@@ -69,8 +69,8 @@ export default function Header({ toggleSidebar, userName, email }) {
       <div className="flex items-center justify-between px-6 py-4 relative">
         {/* Kiri: Sidebar toggle & judul halaman */}
         <div className="flex items-center space-x-4">
-          <button onClick={toggleSidebar} className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition" aria-label="Toggle Sidebar">
-            <Menu className="h-5 w-5 text-gray-600" />
+          <button onClick={toggleSidebar} className="lg:hidden p-2 rounded-lg" aria-label="Toggle Sidebar">
+            <Menu className={`${darkMode ? 'text-gray-100' : 'text-gray-600'} h-5 w-5`} />
           </button>
           {darkMode ? <h1 className="text-xl font-semibold text-gray-100">{pageTitle}</h1> : <h1 className="text-xl font-semibold text-gray-800">{pageTitle}</h1>}
         </div>

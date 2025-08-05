@@ -111,7 +111,7 @@ const router = createBrowserRouter([
         element: <AdminPage />,
       },
       {
-        path: 'pengajuan',
+        path: 'pengaduan',
         element: <AdminTotalPengaduan />,
       },
       {

@@ -1,11 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import AuthForm from './AuthForm.jsx';
 import { toast } from 'react-toastify';
+import AuthForm from './AuthForm.jsx';
+import { useSettings } from '../../contexts/SettingsContext.jsx';
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Ambil fungsi setUser dari SettingsContext
+  const { setUser } = useSettings();
 
   const handleLogin = async (data) => {
     setLoading(true); // mulai loading
@@ -23,6 +27,9 @@ export default function LoginPage() {
 
       if (response.ok) {
         toast.success(result.message);
+
+        // Simpan user ke SettingsContext
+        setUser(result.user);
         localStorage.setItem('user', JSON.stringify(result.user));
 
         if (result.user.role === 'admin') {

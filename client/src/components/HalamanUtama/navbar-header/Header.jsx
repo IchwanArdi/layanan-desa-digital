@@ -4,16 +4,23 @@ import { useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useSettings } from '../../../contexts/SettingsContext.jsx'; // Import context untuk dark mode
+import { useSettings } from '../../../contexts/SettingsContext.jsx';
 
 export default function Header({ toggleSidebar, userName, email }) {
-  const navigate = useNavigate(); // untuk navigasi ke halaman lain
-  const { darkMode, setDarkMode } = useSettings(); // Ambil state darkMode dari context
+  const navigate = useNavigate();
+  const { darkMode, setDarkMode, user } = useSettings();
 
   // Fungsi untuk toggle dark mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
+
+  // Ambil role dari user dengan pengecekan lebih teliti
+  const role = user?.role || null;
+
+  // Debug: log role untuk memastikan nilainya benar
+  console.log('Current user role:', role);
+  console.log('User object:', user);
 
   // Fungsi untuk menangani logout
   const handleLogout = async () => {
@@ -27,8 +34,8 @@ export default function Header({ toggleSidebar, userName, email }) {
 
       if (response.ok) {
         toast.success(result.message);
-        localStorage.removeItem('user'); // hapus session local
-        navigate('/'); // redirect ke halaman utama/login
+        localStorage.removeItem('user');
+        navigate('/');
       } else {
         toast.error(result.message);
       }
@@ -111,51 +118,56 @@ export default function Header({ toggleSidebar, userName, email }) {
                       <User className={`w-5 h-5 ${darkMode ? 'text-slate-400' : 'text-gray-600'}`} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-semibold ${darkMode ? 'text-slate-100' : 'text-gray-900'} truncate`}>Halo, {userName}!</p>
+                      <p className={`text-sm font-semibold ${darkMode ? 'text-slate-100' : 'text-gray-900'} truncate`}>
+                        Halo, {userName}!{/* Debug indicator untuk role */}
+                        {role === 'admin' && <span className="text-xs text-blue-400 ml-1">(Admin)</span>}
+                      </p>
                       <p className={`text-xs ${darkMode ? 'text-slate-400' : 'text-gray-500'} truncate`}>{email}</p>
                     </div>
                   </div>
                 </div>
 
-                {/* Divider */}
+                {/* Divider - hanya tampil jika bukan admin atau jika ada menu yang ditampilkan */}
+                {role !== 'admin' && <div className={`h-px mx-4 mb-3 ${darkMode ? 'bg-slate-700' : 'bg-gray-200'}`}></div>}
+
+                {/* Menu Items - hanya untuk non-admin */}
+                {role !== 'admin' && (
+                  <div className="px-2 space-y-1 mb-3">
+                    <button
+                      className={`w-full flex items-center text-sm px-3 py-2.5 rounded-lg transition-all duration-200 group ${
+                        darkMode ? 'text-slate-300 hover:bg-slate-800 hover:text-slate-100' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                      }`}
+                      onClick={() => {
+                        navigate('/dashboard/profil');
+                        setProfilOpen(false);
+                      }}
+                    >
+                      <User className={`w-4 h-4 mr-3 ${darkMode ? 'text-slate-400 group-hover:text-slate-300' : 'text-gray-500 group-hover:text-gray-600'} transition-colors duration-200`} />
+                      <span>Profil Saya</span>
+                    </button>
+
+                    <button
+                      className={`w-full flex items-center text-sm px-3 py-2.5 rounded-lg transition-all duration-200 group ${
+                        darkMode ? 'text-slate-300 hover:bg-slate-800 hover:text-slate-100' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                      }`}
+                      onClick={() => {
+                        toast.info('Fitur pengaturan akan segera tersedia', {
+                          position: 'top-right',
+                          theme: darkMode ? 'dark' : 'light',
+                        });
+                        setProfilOpen(false);
+                      }}
+                    >
+                      <Settings className={`w-4 h-4 mr-3 ${darkMode ? 'text-slate-400 group-hover:text-slate-300' : 'text-gray-500 group-hover:text-gray-600'} transition-colors duration-200`} />
+                      <span>Pengaturan</span>
+                    </button>
+                  </div>
+                )}
+
+                {/* Divider sebelum logout */}
                 <div className={`h-px mx-4 mb-3 ${darkMode ? 'bg-slate-700' : 'bg-gray-200'}`}></div>
 
-                {/* Menu Items */}
-                <div className="px-2 space-y-1 mb-3">
-                  <button
-                    className={`w-full flex items-center text-sm px-3 py-2.5 rounded-lg transition-all duration-200 group ${
-                      darkMode ? 'text-slate-300 hover:bg-slate-800 hover:text-slate-100' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                    }`}
-                    onClick={() => {
-                      navigate('/dashboard/profil');
-                      setProfilOpen(false);
-                    }}
-                  >
-                    <User className={`w-4 h-4 mr-3 ${darkMode ? 'text-slate-400 group-hover:text-slate-300' : 'text-gray-500 group-hover:text-gray-600'} transition-colors duration-200`} />
-                    <span>Profil Saya</span>
-                  </button>
-
-                  <button
-                    className={`w-full flex items-center text-sm px-3 py-2.5 rounded-lg transition-all duration-200 group ${
-                      darkMode ? 'text-slate-300 hover:bg-slate-800 hover:text-slate-100' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                    }`}
-                    onClick={() => {
-                      toast.info('Fitur pengaturan akan segera tersedia', {
-                        position: 'top-right',
-                        theme: darkMode ? 'dark' : 'light',
-                      });
-                      setProfilOpen(false);
-                    }}
-                  >
-                    <Settings className={`w-4 h-4 mr-3 ${darkMode ? 'text-slate-400 group-hover:text-slate-300' : 'text-gray-500 group-hover:text-gray-600'} transition-colors duration-200`} />
-                    <span>Pengaturan</span>
-                  </button>
-                </div>
-
-                {/* Divider */}
-                <div className={`h-px mx-4 mb-3 ${darkMode ? 'bg-slate-700' : 'bg-gray-200'}`}></div>
-
-                {/* Logout Button */}
+                {/* Logout Button - selalu tampil untuk semua role */}
                 <div className="px-2">
                   <button
                     onClick={() => {

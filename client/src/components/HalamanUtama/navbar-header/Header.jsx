@@ -65,7 +65,7 @@ export default function Header({ toggleSidebar, userName, email }) {
   }, []);
 
   return (
-    <header className={` ${darkMode ? 'bg-gray-900 text-white' : 'bg-white/20 text-gray-800'} shadow-sm border-b border-gray-200 sticky top-0 z-30 lg:ml-64`}>
+    <header className={` ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-800'} shadow-sm border-b border-gray-200 sticky top-0 z-30 lg:ml-64`}>
       <div className="flex items-center justify-between px-6 py-4 relative">
         {/* Kiri: Sidebar toggle & judul halaman */}
         <div className="flex items-center space-x-4">

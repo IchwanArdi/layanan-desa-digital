@@ -35,10 +35,7 @@ router.get('/pengaduan', isAuthenticated, async (req, res) => {
     });
 
     const pengaduanTerbaruRaw = await Pengaduan.find(pengaduanQuery).sort({ createdAt: -1 });
-
     const pengaduanTerbaru = decryptArrayData(pengaduanTerbaruRaw, decryptPengaduan);
-
-    console.log(pengaduanTerbaru);
 
     res.json({
       nama: req.session.user.nama,

@@ -22,9 +22,10 @@ const PengaduanSchema = new mongoose.Schema({
     enum: ['menunggu', 'proses', 'ditindaklanjuti', 'selesai'],
     default: 'menunggu',
   },
+  // Relasi ke user
   warga: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // UBAH DARI 'Warga' MENJADI 'User'
+    ref: 'User',
   },
   createdAt: {
     type: Date,

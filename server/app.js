@@ -54,6 +54,7 @@ const pengaduanDataRoute = require('./routes/api/pengaduan');
 const ajukanDataRoute = require('./routes/api/ajukanData');
 
 const totalPengaduan = require('./routes/api/totalPengaduan');
+const totalAjukan = require('./routes/api/totalAjukanData');
 const totalUser = require('./routes/api/dataUser');
 
 // Routes
@@ -67,6 +68,7 @@ app.use('/api', pengaduanDataRoute);
 app.use('/api', ajukanDataRoute);
 
 app.use('/api', totalPengaduan);
+app.use('/api', totalAjukan);
 app.use('/api', totalUser);
 
 module.exports = app;

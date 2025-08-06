@@ -8,8 +8,6 @@ router.get('/user', isAuthenticated, async (req, res) => {
     // Ambil semua user yang role-nya 'user', hanya nama dan email
     const users = await User.find({ role: 'user' }, 'nama email').sort({ createdAt: -1 });
 
-    console.log(users);
-
     res.status(200).json(users);
   } catch (error) {
     console.error('Error fetching users:', error);

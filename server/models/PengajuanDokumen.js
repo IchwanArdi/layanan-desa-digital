@@ -38,8 +38,8 @@ const pengajuanDokumenSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'diproses', 'selesai', 'ditolak'],
-      default: 'pending',
+      enum: ['menunggu', 'proses', 'ditindaklanjuti', 'selesai'],
+      default: 'menunggu',
     },
     catatan: {
       type: String,
@@ -50,10 +50,9 @@ const pengajuanDokumenSchema = new mongoose.Schema(
       default: null,
     },
     // Relasi ke user
-    userId: {
+    warga: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
     nomorSurat: {
       type: String,

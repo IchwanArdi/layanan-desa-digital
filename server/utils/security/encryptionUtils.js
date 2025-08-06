@@ -107,9 +107,9 @@ module.exports = {
   decrypt,
   encryptFields,
   decryptFields,
-  encryptPengajuanDokumen,
   decryptPengajuanDokumen,
-  encryptPengaduan,
+  encryptPengajuanDokumen,
   decryptPengaduan,
+  encryptPengaduan,
   decryptArrayData,
 };

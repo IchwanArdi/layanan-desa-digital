@@ -31,7 +31,7 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
     const totalPengajuanDokumen = await PengajuanDokumen.countDocuments(pengajuanQuery);
     const totalPengajuanDokumenProses = await PengajuanDokumen.countDocuments({
       ...pengajuanQuery,
-      status: { $in: ['pending', 'diproses'] },
+      status: { $in: ['menunggu', 'proses', 'ditindaklanjuti'] },
     });
     const totalPengajuanDokumenSelesai = await PengajuanDokumen.countDocuments({
       ...pengajuanQuery,

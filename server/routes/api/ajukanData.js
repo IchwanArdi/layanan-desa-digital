@@ -25,7 +25,7 @@ router.post('/pengajuan-dokumen', isAuthenticated, async (req, res) => {
       alamat: address.trim(),
       keperluan: purpose.trim(),
       userId, // Set ID user yang mengajukan
-      status: 'pending', // Status awal pengajuan
+      status: 'menunggu', // Status awal pengajuan
     };
 
     // Enkripsi data sensitif sebelum disimpan

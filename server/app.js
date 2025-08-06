@@ -53,6 +53,9 @@ const dashboardDataRoutes = require('./routes/api/dashboard');
 const pengaduanDataRoute = require('./routes/api/pengaduan');
 const ajukanDataRoute = require('./routes/api/ajukanData');
 
+const totalPengaduan = require('./routes/api/totalPengaduan');
+const totalUser = require('./routes/api/dataUser');
+
 // Routes
 app.use('/api', loginRoute); // semua route diawali dengan /api
 app.use('/api', registerRoute); // semua route diawali dengan /api
@@ -62,5 +65,8 @@ app.use('/api', checkAuthRoute); // route untuk cek autentikasi
 app.use('/api', dashboardDataRoutes);
 app.use('/api', pengaduanDataRoute);
 app.use('/api', ajukanDataRoute);
+
+app.use('/api', totalPengaduan);
+app.use('/api', totalUser);
 
 module.exports = app;

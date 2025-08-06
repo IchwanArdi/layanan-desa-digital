@@ -1,68 +1,104 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CheckCircle, Clock, AlertCircle, XCircle, Eye, FileText } from 'lucide-react';
+import { toast } from 'react-toastify';
+import { useSettings } from '../contexts/SettingsContext';
 
 function AdminTotalPengaduan() {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [showModal, setShowModal] = useState(false);
   const [selectedPengaduan, setSelectedPengaduan] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState(null);
+  const [userData, setUserData] = useState([]);
+  const [pengaduanList, setPengaduanList] = useState([]);
 
-  // Data contoh statis untuk UI
-  const stats = {
-    total: 156,
-    menunggu: 23,
-    proses: 15,
-    selesai: 98,
-    ditolak: 20,
+  const { darkMode } = useSettings();
+
+  // Fetch users data
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user`, {
+          credentials: 'include',
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+          setUserData(result);
+        } else {
+          toast.error(result.message || 'Gagal mengambil data user.');
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        toast.error('Terjadi kesalahan saat mengambil data user.');
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  // Fetch pengaduan data
+  useEffect(() => {
+    const fetchPengaduan = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pengaduan`, {
+          credentials: 'include',
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+          setDashboardData(result);
+          // Assuming the API returns pengaduan data in result.pengaduanTerbaru or similar
+          setPengaduanList(result.pengaduanTerbaru || result || []);
+        } else {
+          toast.error(result.message || 'Gagal mengambil data pengaduan.');
+        }
+      } catch (error) {
+        console.error('Error fetching pengaduan:', error);
+        toast.error('Terjadi kesalahan saat mengambil data pengaduan.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPengaduan();
+  }, []);
+
+  // Function to get user info by warga ID
+  const getUserInfo = (wargaId) => {
+    const user = userData.find((user) => user._id === wargaId);
+    return user || { nama: 'N/A', email: 'N/A' };
   };
-
-  const pengaduanList = [
-    {
-      _id: '1',
-      warga: { nama: 'Ahmad Susilo', email: 'ahmad@email.com' },
-      judul: 'Jalan Rusak di Depan Rumah',
-      kategori: 'Infrastruktur',
-      lokasi: 'Jl. Merdeka No. 15, RT 02/RW 05',
-      status: 'menunggu',
-      createdAt: '2024-01-15T10:30:00Z',
-      updatedAt: '2024-01-15T10:30:00Z',
-      deskripsi: 'Jalan di depan rumah sudah rusak parah dengan banyak lubang yang membahayakan pengendara.',
-      keteranganAdmin: null,
-    },
-    {
-      _id: '2',
-      warga: { nama: 'Siti Rahayu', email: 'siti@email.com' },
-      judul: 'Lampu Jalan Mati',
-      kategori: 'Utilitas',
-      lokasi: 'Jl. Sudirman RT 03/RW 02',
-      status: 'proses',
-      createdAt: '2024-01-14T08:15:00Z',
-      updatedAt: '2024-01-16T09:20:00Z',
-      deskripsi: 'Lampu jalan di area ini sudah mati sejak seminggu yang lalu, membuat jalanan gelap di malam hari.',
-      keteranganAdmin: 'Sedang dikoordinasikan dengan PLN untuk perbaikan',
-    },
-    {
-      _id: '3',
-      warga: { nama: 'Budi Santoso', email: 'budi@email.com' },
-      judul: 'Sampah Menumpuk',
-      kategori: 'Kebersihan',
-      lokasi: 'Pasar Tradisional Blok A',
-      status: 'selesai',
-      createdAt: '2024-01-10T14:45:00Z',
-      updatedAt: '2024-01-18T16:00:00Z',
-      deskripsi: 'Sampah di area pasar menumpuk dan tidak diangkut selama beberapa hari.',
-      keteranganAdmin: 'Telah dikoordinasikan dengan petugas kebersihan, sampah sudah dibersihkan',
-    },
-  ];
 
   const getStatusBadge = (status) => {
     const statusConfig = {
-      menunggu: { color: 'bg-yellow-100 text-yellow-800', text: 'Menunggu' },
-      proses: { color: 'bg-blue-100 text-blue-800', text: 'Diproses' },
-      selesai: { color: 'bg-green-100 text-green-800', text: 'Selesai' },
-      ditolak: { color: 'bg-red-100 text-red-800', text: 'Ditolak' },
+      menunggu: {
+        color: darkMode ? 'bg-yellow-900/30 text-yellow-300 border border-yellow-700/50' : 'bg-yellow-100 text-yellow-800',
+        text: 'Menunggu',
+      },
+      proses: {
+        color: darkMode ? 'bg-blue-900/30 text-blue-300 border border-blue-700/50' : 'bg-blue-100 text-blue-800',
+        text: 'Diproses',
+      },
+      selesai: {
+        color: darkMode ? 'bg-green-900/30 text-green-300 border border-green-700/50' : 'bg-green-100 text-green-800',
+        text: 'Selesai',
+      },
+      ditolak: {
+        color: darkMode ? 'bg-red-900/30 text-red-300 border border-red-700/50' : 'bg-red-100 text-red-800',
+        text: 'Ditolak',
+      },
+      ditindaklanjuti: {
+        color: darkMode ? 'bg-purple-900/30 text-purple-300 border border-purple-700/50' : 'bg-purple-100 text-purple-800',
+        text: 'Ditindaklanjuti',
+      },
     };
 
-    const config = statusConfig[status] || { color: 'bg-gray-100 text-gray-800', text: status };
+    const config = statusConfig[status] || {
+      color: darkMode ? 'bg-gray-700 text-gray-300 border border-gray-600' : 'bg-gray-100 text-gray-800',
+      text: status,
+    };
     return <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${config.color}`}>{config.text}</span>;
   };
 
@@ -78,242 +114,345 @@ function AdminTotalPengaduan() {
 
   const viewDetail = (pengaduanId) => {
     const pengaduan = pengaduanList.find((p) => p._id === pengaduanId);
-    setSelectedPengaduan(pengaduan);
-    setShowModal(true);
+    if (pengaduan) {
+      // Add user info to the selected pengaduan
+      const userInfo = getUserInfo(pengaduan.warga);
+      setSelectedPengaduan({
+        ...pengaduan,
+        warga: userInfo,
+      });
+      setShowModal(true);
+    }
   };
 
-  const updateStatus = (pengaduanId, newStatus) => {
-    // Fungsi placeholder untuk update status
-    console.log(`Update pengaduan ${pengaduanId} to ${newStatus}`);
+  const updateStatus = async (pengaduanId, newStatus) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pengaduan/${pengaduanId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          status: newStatus,
+          keteranganAdmin: `Status diubah menjadi ${newStatus}`, // Optional
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success(`Status pengaduan berhasil diubah menjadi ${newStatus}`);
+
+        // Update data lokal tanpa refresh
+        setDashboardData((prevData) => ({
+          ...prevData,
+          pengaduanTerbaru: prevData.pengaduanTerbaru.map((item) => (item._id === pengaduanId ? { ...item, status: newStatus, updatedAt: new Date().toISOString() } : item)),
+        }));
+
+        // Jika sedang melihat detail pengaduan yang diupdate, update juga selectedPengaduan
+        if (selectedPengaduan && selectedPengaduan._id === pengaduanId) {
+          setSelectedPengaduan((prev) => ({
+            ...prev,
+            status: newStatus,
+            updatedAt: new Date().toISOString(),
+          }));
+        }
+      } else {
+        toast.error(result.message || 'Gagal mengubah status pengaduan');
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast.error('Terjadi kesalahan saat mengubah status');
+    }
   };
 
   // Filter pengaduan berdasarkan status yang dipilih
   const filteredPengaduan = selectedStatus === 'all' ? pengaduanList : pengaduanList.filter((p) => p.status === selectedStatus);
 
+  // Hitung total pengaduan berdasarkan status
+  const statusCount = pengaduanList.reduce(
+    (acc, item) => {
+      acc[item.status] = (acc[item.status] || 0) + 1;
+      return acc;
+    },
+    {
+      menunggu: 0,
+      proses: 0,
+      ditindaklanjuti: 0,
+      selesai: 0,
+      ditolak: 0,
+    }
+  );
+
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard Admin - Pengaduan Warga</h1>
-          <p className="text-gray-600">Kelola dan monitor semua pengaduan dari warga</p>
+    <div className="min-h-screen">
+      {/* Loading */}
+      {loading ? (
+        <div className="flex items-center justify-center h-screen">
+          <div className={`${darkMode ? 'text-white' : 'text-gray-800'} loader`}>Loading...</div>
         </div>
+      ) : (
+        <>
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className={`${darkMode ? 'text-white' : 'text-gray-800'} text-2xl font-bold mb-6`}>Dashboard Admin - Pengaduan Warga</h1>
+              <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Kelola dan monitor semua pengaduan dari warga</p>
+            </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-gray-100 rounded-lg">
-                <FileText className="w-6 h-6 text-gray-600" />
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+              <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
+                <div className="flex items-center">
+                  <div className={`p-2 ${darkMode ? 'bg-slate-700' : 'bg-gray-100'} rounded-lg`}>
+                    <FileText className={`w-6 h-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`} />
+                  </div>
+                  <div className="ml-4">
+                    <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Total</p>
+                    <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{pengaduanList.length}</p>
+                  </div>
+                </div>
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+
+              <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
+                <div className="flex items-center">
+                  <div className={`p-2 ${darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100'} rounded-lg`}>
+                    <Clock className={`w-6 h-6 ${darkMode ? 'text-yellow-300' : 'text-yellow-600'}`} />
+                  </div>
+                  <div className="ml-4">
+                    <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Menunggu</p>
+                    <p className={`text-2xl font-bold ${darkMode ? 'text-yellow-300' : 'text-yellow-600'}`}>{statusCount.menunggu}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
+                <div className="flex items-center">
+                  <div className={`p-2 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-100'} rounded-lg`}>
+                    <AlertCircle className={`w-6 h-6 ${darkMode ? 'text-blue-300' : 'text-blue-600'}`} />
+                  </div>
+                  <div className="ml-4">
+                    <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Proses</p>
+                    <p className={`text-2xl font-bold ${darkMode ? 'text-blue-300' : 'text-blue-600'}`}>{statusCount.proses}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
+                <div className="flex items-center">
+                  <div className={`p-2 ${darkMode ? 'bg-green-900/30' : 'bg-green-100'} rounded-lg`}>
+                    <CheckCircle className={`w-6 h-6 ${darkMode ? 'text-green-300' : 'text-green-600'}`} />
+                  </div>
+                  <div className="ml-4">
+                    <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Ditindaklanjuti</p>
+                    <p className={`text-2xl font-bold ${darkMode ? 'text-green-300' : 'text-green-600'}`}>{statusCount.ditindaklanjuti}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
+                <div className="flex items-center">
+                  <div className={`p-2 ${darkMode ? 'bg-red-900/30' : 'bg-red-100'} rounded-lg`}>
+                    <XCircle className={`w-6 h-6 ${darkMode ? 'text-red-300' : 'text-red-600'}`} />
+                  </div>
+                  <div className="ml-4">
+                    <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Selesai</p>
+                    <p className={`text-2xl font-bold ${darkMode ? 'text-red-300' : 'text-red-600'}`}>{statusCount.selesai}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Filter */}
+            <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow mb-6 p-6`}>
+              <div className="flex items-center space-x-4">
+                <label className={`text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Filter Status:</label>
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  className={`border ${darkMode ? 'border-slate-600 bg-slate-700 text-white focus:ring-blue-400' : 'border-gray-300 bg-white text-gray-900 focus:ring-blue-500'} rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2`}
+                >
+                  <option value="all">Semua Status</option>
+                  <option value="menunggu">Menunggu</option>
+                  <option value="proses">Proses</option>
+                  <option value="ditindaklanjuti">Ditindaklanjuti</option>
+                  <option value="selesai">Selesai</option>
+                  <option value="ditolak">Ditolak</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Pengaduan List */}
+            <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow`}>
+              <div className={`px-6 py-4 border-b ${darkMode ? 'border-slate-700' : 'border-gray-200'}`}>
+                <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Daftar Pengaduan</h2>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+                  <thead className={`${darkMode ? 'bg-slate-700' : 'bg-gray-50'}`}>
+                    <tr>
+                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Pengadu</th>
+                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Judul</th>
+                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Kategori</th>
+                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Lokasi</th>
+                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Status</th>
+                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Tanggal</th>
+                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody className={`${darkMode ? 'bg-slate-800 divide-slate-700' : 'bg-white divide-gray-200'} divide-y`}>
+                    {filteredPengaduan.map((pengaduan) => {
+                      const userInfo = getUserInfo(pengaduan.warga);
+                      return (
+                        <tr key={pengaduan._id} className={`${darkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-50'}`}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{userInfo.nama}</div>
+                            <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{userInfo.email}</div>
+                          </td>
+
+                          <td className="px-6 py-4">
+                            <div className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'} max-w-xs truncate`}>{pengaduan.judul}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{pengaduan.kategori}</span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'} max-w-xs truncate`}>{pengaduan.lokasi}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(pengaduan.status)}</td>
+                          <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{formatDate(pengaduan.createdAt)}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div className="flex space-x-2">
+                              <button onClick={() => viewDetail(pengaduan._id)} className={`${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-900'}`}>
+                                <Eye className="w-4 h-4" />
+                              </button>
+
+                              {pengaduan.status === 'menunggu' && (
+                                <>
+                                  <button
+                                    onClick={() => updateStatus(pengaduan._id, 'proses')}
+                                    className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-blue-300 bg-blue-900/30 hover:bg-blue-900/50 border border-blue-700/50' : 'text-blue-600 bg-blue-100 hover:text-blue-900'}`}
+                                  >
+                                    Proses
+                                  </button>
+                                  <button
+                                    onClick={() => updateStatus(pengaduan._id, 'ditolak')}
+                                    className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-red-300 bg-red-900/30 hover:bg-red-900/50 border border-red-700/50' : 'text-red-600 bg-red-100 hover:text-red-900'}`}
+                                  >
+                                    Tolak
+                                  </button>
+                                </>
+                              )}
+
+                              {pengaduan.status === 'proses' && (
+                                <>
+                                  <button
+                                    onClick={() => updateStatus(pengaduan._id, 'ditindaklanjuti')}
+                                    className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-purple-300 bg-purple-900/30 hover:bg-purple-900/50 border border-purple-700/50' : 'text-purple-600 bg-purple-100 hover:text-purple-900'}`}
+                                  >
+                                    Tindaklanjuti
+                                  </button>
+                                  <button
+                                    onClick={() => updateStatus(pengaduan._id, 'selesai')}
+                                    className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-green-300 bg-green-900/30 hover:bg-green-900/50 border border-green-700/50' : 'text-green-600 bg-green-100 hover:text-green-900'}`}
+                                  >
+                                    Selesai
+                                  </button>
+                                </>
+                              )}
+
+                              {pengaduan.status === 'ditindaklanjuti' && (
+                                <button
+                                  onClick={() => updateStatus(pengaduan._id, 'selesai')}
+                                  className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-green-300 bg-green-900/30 hover:bg-green-900/50 border border-green-700/50' : 'text-green-600 bg-green-100 hover:text-green-900'}`}
+                                >
+                                  Selesai
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+
+                {filteredPengaduan.length === 0 && (
+                  <div className="text-center py-12">
+                    <FileText className={`mx-auto h-12 w-12 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                    <h3 className={`mt-2 text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>Tidak ada pengaduan</h3>
+                    <p className={`mt-1 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Belum ada pengaduan dengan status yang dipilih.</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-yellow-100 rounded-lg">
-                <Clock className="w-6 h-6 text-yellow-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Menunggu</p>
-                <p className="text-2xl font-bold text-yellow-600">{stats.menunggu}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <AlertCircle className="w-6 h-6 text-blue-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Proses</p>
-                <p className="text-2xl font-bold text-blue-600">{stats.proses}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircle className="w-6 h-6 text-green-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Selesai</p>
-                <p className="text-2xl font-bold text-green-600">{stats.selesai}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-red-100 rounded-lg">
-                <XCircle className="w-6 h-6 text-red-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Ditolak</p>
-                <p className="text-2xl font-bold text-red-600">{stats.ditolak}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Filter */}
-        <div className="bg-white rounded-lg shadow mb-6 p-6">
-          <div className="flex items-center space-x-4">
-            <label className="text-sm font-medium text-gray-700">Filter Status:</label>
-            <select value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)} className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="all">Semua Status</option>
-              <option value="menunggu">Menunggu</option>
-              <option value="proses">Proses</option>
-              <option value="selesai">Selesai</option>
-              <option value="ditolak">Ditolak</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Pengaduan List */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Daftar Pengaduan</h2>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pengadu</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredPengaduan.map((pengaduan) => (
-                  <tr key={pengaduan._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{pengaduan.warga?.nama || 'N/A'}</div>
-                      <div className="text-sm text-gray-500">{pengaduan.warga?.email || 'N/A'}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900 max-w-xs truncate">{pengaduan.judul}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-900">{pengaduan.kategori}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900 max-w-xs truncate">{pengaduan.lokasi}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(pengaduan.status)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(pengaduan.createdAt)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-2">
-                        <button onClick={() => viewDetail(pengaduan._id)} className="text-blue-600 hover:text-blue-900">
-                          <Eye className="w-4 h-4" />
-                        </button>
-
-                        {pengaduan.status === 'menunggu' && (
-                          <>
-                            <button onClick={() => updateStatus(pengaduan._id, 'proses')} className="text-blue-600 hover:text-blue-900 px-2 py-1 text-xs bg-blue-100 rounded">
-                              Proses
-                            </button>
-                            <button onClick={() => updateStatus(pengaduan._id, 'ditolak')} className="text-red-600 hover:text-red-900 px-2 py-1 text-xs bg-red-100 rounded">
-                              Tolak
-                            </button>
-                          </>
-                        )}
-
-                        {pengaduan.status === 'proses' && (
-                          <button onClick={() => updateStatus(pengaduan._id, 'selesai')} className="text-green-600 hover:text-green-900 px-2 py-1 text-xs bg-green-100 rounded">
-                            Selesai
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {filteredPengaduan.length === 0 && (
-              <div className="text-center py-12">
-                <FileText className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">Tidak ada pengaduan</h3>
-                <p className="mt-1 text-sm text-gray-500">Belum ada pengaduan dengan status yang dipilih.</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+        </>
+      )}
 
       {/* Modal Detail */}
       {showModal && selectedPengaduan && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+          <div className={`relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white'}`}>
             <div className="mt-3">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-gray-900">Detail Pengaduan</h3>
-                <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
+                <h3 className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>Detail Pengaduan</h3>
+                <button onClick={() => setShowModal(false)} className={`${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}>
                   <XCircle className="w-6 h-6" />
                 </button>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Judul</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedPengaduan.judul}</p>
+                  <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Judul</label>
+                  <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{selectedPengaduan.judul}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Kategori</label>
-                    <p className="mt-1 text-sm text-gray-900">{selectedPengaduan.kategori}</p>
+                    <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Kategori</label>
+                    <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{selectedPengaduan.kategori}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Status</label>
+                    <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Status</label>
                     <div className="mt-1">{getStatusBadge(selectedPengaduan.status)}</div>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Lokasi</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedPengaduan.lokasi}</p>
+                  <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Lokasi</label>
+                  <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{selectedPengaduan.lokasi}</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Deskripsi</label>
-                  <p className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{selectedPengaduan.deskripsi}</p>
+                  <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Deskripsi</label>
+                  <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'} whitespace-pre-wrap`}>{selectedPengaduan.deskripsi}</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Pengadu</label>
-                  <p className="mt-1 text-sm text-gray-900">
+                  <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Pengadu</label>
+                  <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                     {selectedPengaduan.warga?.nama} ({selectedPengaduan.warga?.email})
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Tanggal Dibuat</label>
-                    <p className="mt-1 text-sm text-gray-900">{formatDate(selectedPengaduan.createdAt)}</p>
+                    <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Tanggal Dibuat</label>
+                    <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{formatDate(selectedPengaduan.createdAt)}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Terakhir Diupdate</label>
-                    <p className="mt-1 text-sm text-gray-900">{formatDate(selectedPengaduan.updatedAt)}</p>
+                    <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Terakhir Diupdate</label>
+                    <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{formatDate(selectedPengaduan.updatedAt)}</p>
                   </div>
                 </div>
 
                 {selectedPengaduan.keteranganAdmin && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Keterangan Admin</label>
-                    <p className="mt-1 text-sm text-gray-900">{selectedPengaduan.keteranganAdmin}</p>
+                    <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Keterangan Admin</label>
+                    <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{selectedPengaduan.keteranganAdmin}</p>
                   </div>
                 )}
               </div>
@@ -326,7 +465,7 @@ function AdminTotalPengaduan() {
                         updateStatus(selectedPengaduan._id, 'proses');
                         setShowModal(false);
                       }}
-                      className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700"
+                      className={`px-4 py-2 text-sm font-medium rounded-md ${darkMode ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
                     >
                       Set ke Proses
                     </button>
@@ -335,7 +474,7 @@ function AdminTotalPengaduan() {
                         updateStatus(selectedPengaduan._id, 'ditolak');
                         setShowModal(false);
                       }}
-                      className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700"
+                      className={`px-4 py-2 text-sm font-medium rounded-md ${darkMode ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-red-600 hover:bg-red-700 text-white'}`}
                     >
                       Tolak
                     </button>
@@ -343,18 +482,41 @@ function AdminTotalPengaduan() {
                 )}
 
                 {selectedPengaduan.status === 'proses' && (
+                  <>
+                    <button
+                      onClick={() => {
+                        updateStatus(selectedPengaduan._id, 'ditindaklanjuti');
+                        setShowModal(false);
+                      }}
+                      className={`px-4 py-2 text-sm font-medium rounded-md ${darkMode ? 'bg-purple-600 hover:bg-purple-700 text-white' : 'bg-purple-600 hover:bg-purple-700 text-white'}`}
+                    >
+                      Tindaklanjuti
+                    </button>
+                    <button
+                      onClick={() => {
+                        updateStatus(selectedPengaduan._id, 'selesai');
+                        setShowModal(false);
+                      }}
+                      className={`px-4 py-2 text-sm font-medium rounded-md ${darkMode ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white'}`}
+                    >
+                      Selesaikan
+                    </button>
+                  </>
+                )}
+
+                {selectedPengaduan.status === 'ditindaklanjuti' && (
                   <button
                     onClick={() => {
                       updateStatus(selectedPengaduan._id, 'selesai');
                       setShowModal(false);
                     }}
-                    className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700"
+                    className={`px-4 py-2 text-sm font-medium rounded-md ${darkMode ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white'}`}
                   >
                     Selesaikan
                   </button>
                 )}
 
-                <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-400">
+                <button onClick={() => setShowModal(false)} className={`px-4 py-2 text-sm font-medium rounded-md ${darkMode ? 'bg-slate-600 text-white hover:bg-slate-500' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}>
                   Tutup
                 </button>
               </div>

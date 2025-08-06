@@ -49,8 +49,8 @@ export default function Header({ toggleSidebar, userName, email }) {
     const isAdmin = role === 'admin';
     if (isAdmin) {
       if (pathname === '/admin' || pathname === '/admin/dashboard') return 'Dashboard Admin';
-      if (pathname.includes('/admin/pengajuan')) return 'Pengajuan Admin';
-      if (pathname.includes('/admin/pengaduan')) return 'Pengaduan Admin';
+      if (pathname.includes('/admin/pengajuan')) return 'Pengajuan Warga';
+      if (pathname.includes('/admin/pengaduan')) return 'Pengaduan Warga';
       if (pathname.includes('/admin/profile')) return 'Profil Admin';
       return 'Dashboard Admin';
     } else {

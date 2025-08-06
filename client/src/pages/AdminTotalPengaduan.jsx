@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CheckCircle, Clock, AlertCircle, XCircle, Eye, FileText } from 'lucide-react';
+import { CheckCircle, Clock, AlertCircle, XCircle, Eye, FileText, Activity } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useSettings } from '../contexts/SettingsContext';
 
@@ -8,7 +8,6 @@ function AdminTotalPengaduan() {
   const [showModal, setShowModal] = useState(false);
   const [selectedPengaduan, setSelectedPengaduan] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [dashboardData, setDashboardData] = useState(null);
   const [userData, setUserData] = useState([]);
   const [pengaduanList, setPengaduanList] = useState([]);
 
@@ -48,8 +47,6 @@ function AdminTotalPengaduan() {
         const result = await response.json();
 
         if (response.ok) {
-          setDashboardData(result);
-          // Assuming the API returns pengaduan data in result.pengaduanTerbaru or similar
           setPengaduanList(result.pengaduanTerbaru || result || []);
         } else {
           toast.error(result.message || 'Gagal mengambil data pengaduan.');
@@ -115,7 +112,6 @@ function AdminTotalPengaduan() {
   const viewDetail = (pengaduanId) => {
     const pengaduan = pengaduanList.find((p) => p._id === pengaduanId);
     if (pengaduan) {
-      // Add user info to the selected pengaduan
       const userInfo = getUserInfo(pengaduan.warga);
       setSelectedPengaduan({
         ...pengaduan,
@@ -135,7 +131,7 @@ function AdminTotalPengaduan() {
         credentials: 'include',
         body: JSON.stringify({
           status: newStatus,
-          keteranganAdmin: `Status diubah menjadi ${newStatus}`, // Optional
+          keteranganAdmin: `Status diubah menjadi ${newStatus}`,
         }),
       });
 
@@ -144,13 +140,10 @@ function AdminTotalPengaduan() {
       if (response.ok) {
         toast.success(`Status pengaduan berhasil diubah menjadi ${newStatus}`);
 
-        // Update data lokal tanpa refresh
-        setDashboardData((prevData) => ({
-          ...prevData,
-          pengaduanTerbaru: prevData.pengaduanTerbaru.map((item) => (item._id === pengaduanId ? { ...item, status: newStatus, updatedAt: new Date().toISOString() } : item)),
-        }));
+        // Update local data
+        setPengaduanList((prevList) => prevList.map((item) => (item._id === pengaduanId ? { ...item, status: newStatus, updatedAt: new Date().toISOString() } : item)));
 
-        // Jika sedang melihat detail pengaduan yang diupdate, update juga selectedPengaduan
+        // Update selectedPengaduan if viewing details
         if (selectedPengaduan && selectedPengaduan._id === pengaduanId) {
           setSelectedPengaduan((prev) => ({
             ...prev,
@@ -185,212 +178,207 @@ function AdminTotalPengaduan() {
     }
   );
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className={`${darkMode ? 'text-white' : 'text-gray-800'} flex items-center space-x-3`}>
+          <Activity className="w-8 h-8 animate-spin" />
+          <span className="text-xl">Memuat Halaman Pengaduan...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen">
-      {/* Loading */}
-      {loading ? (
-        <div className="flex items-center justify-center h-screen">
-          <div className={`${darkMode ? 'text-white' : 'text-gray-800'} loader`}>Loading...</div>
-        </div>
-      ) : (
-        <>
-          <div className="max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="mb-8">
-              <h1 className={`${darkMode ? 'text-white' : 'text-gray-800'} text-2xl font-bold mb-6`}>Dashboard Admin - Pengaduan Warga</h1>
-              <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Kelola dan monitor semua pengaduan dari warga</p>
-            </div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-              <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
-                <div className="flex items-center">
-                  <div className={`p-2 ${darkMode ? 'bg-slate-700' : 'bg-gray-100'} rounded-lg`}>
-                    <FileText className={`w-6 h-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`} />
-                  </div>
-                  <div className="ml-4">
-                    <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Total</p>
-                    <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{pengaduanList.length}</p>
-                  </div>
-                </div>
+      <div className="max-w-7xl mx-auto">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+          <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
+            <div className="flex items-center">
+              <div className={`p-2 ${darkMode ? 'bg-slate-700' : 'bg-gray-100'} rounded-lg`}>
+                <FileText className={`w-6 h-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`} />
               </div>
-
-              <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
-                <div className="flex items-center">
-                  <div className={`p-2 ${darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100'} rounded-lg`}>
-                    <Clock className={`w-6 h-6 ${darkMode ? 'text-yellow-300' : 'text-yellow-600'}`} />
-                  </div>
-                  <div className="ml-4">
-                    <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Menunggu</p>
-                    <p className={`text-2xl font-bold ${darkMode ? 'text-yellow-300' : 'text-yellow-600'}`}>{statusCount.menunggu}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
-                <div className="flex items-center">
-                  <div className={`p-2 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-100'} rounded-lg`}>
-                    <AlertCircle className={`w-6 h-6 ${darkMode ? 'text-blue-300' : 'text-blue-600'}`} />
-                  </div>
-                  <div className="ml-4">
-                    <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Proses</p>
-                    <p className={`text-2xl font-bold ${darkMode ? 'text-blue-300' : 'text-blue-600'}`}>{statusCount.proses}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
-                <div className="flex items-center">
-                  <div className={`p-2 ${darkMode ? 'bg-green-900/30' : 'bg-green-100'} rounded-lg`}>
-                    <CheckCircle className={`w-6 h-6 ${darkMode ? 'text-green-300' : 'text-green-600'}`} />
-                  </div>
-                  <div className="ml-4">
-                    <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Ditindaklanjuti</p>
-                    <p className={`text-2xl font-bold ${darkMode ? 'text-green-300' : 'text-green-600'}`}>{statusCount.ditindaklanjuti}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
-                <div className="flex items-center">
-                  <div className={`p-2 ${darkMode ? 'bg-red-900/30' : 'bg-red-100'} rounded-lg`}>
-                    <XCircle className={`w-6 h-6 ${darkMode ? 'text-red-300' : 'text-red-600'}`} />
-                  </div>
-                  <div className="ml-4">
-                    <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Selesai</p>
-                    <p className={`text-2xl font-bold ${darkMode ? 'text-red-300' : 'text-red-600'}`}>{statusCount.selesai}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Filter */}
-            <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow mb-6 p-6`}>
-              <div className="flex items-center space-x-4">
-                <label className={`text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Filter Status:</label>
-                <select
-                  value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value)}
-                  className={`border ${darkMode ? 'border-slate-600 bg-slate-700 text-white focus:ring-blue-400' : 'border-gray-300 bg-white text-gray-900 focus:ring-blue-500'} rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2`}
-                >
-                  <option value="all">Semua Status</option>
-                  <option value="menunggu">Menunggu</option>
-                  <option value="proses">Proses</option>
-                  <option value="ditindaklanjuti">Ditindaklanjuti</option>
-                  <option value="selesai">Selesai</option>
-                  <option value="ditolak">Ditolak</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Pengaduan List */}
-            <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow`}>
-              <div className={`px-6 py-4 border-b ${darkMode ? 'border-slate-700' : 'border-gray-200'}`}>
-                <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Daftar Pengaduan</h2>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-                  <thead className={`${darkMode ? 'bg-slate-700' : 'bg-gray-50'}`}>
-                    <tr>
-                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Pengadu</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Judul</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Kategori</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Lokasi</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Status</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Tanggal</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody className={`${darkMode ? 'bg-slate-800 divide-slate-700' : 'bg-white divide-gray-200'} divide-y`}>
-                    {filteredPengaduan.map((pengaduan) => {
-                      const userInfo = getUserInfo(pengaduan.warga);
-                      return (
-                        <tr key={pengaduan._id} className={`${darkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-50'}`}>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{userInfo.nama}</div>
-                            <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{userInfo.email}</div>
-                          </td>
-
-                          <td className="px-6 py-4">
-                            <div className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'} max-w-xs truncate`}>{pengaduan.judul}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{pengaduan.kategori}</span>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'} max-w-xs truncate`}>{pengaduan.lokasi}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(pengaduan.status)}</td>
-                          <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{formatDate(pengaduan.createdAt)}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div className="flex space-x-2">
-                              <button onClick={() => viewDetail(pengaduan._id)} className={`${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-900'}`}>
-                                <Eye className="w-4 h-4" />
-                              </button>
-
-                              {pengaduan.status === 'menunggu' && (
-                                <>
-                                  <button
-                                    onClick={() => updateStatus(pengaduan._id, 'proses')}
-                                    className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-blue-300 bg-blue-900/30 hover:bg-blue-900/50 border border-blue-700/50' : 'text-blue-600 bg-blue-100 hover:text-blue-900'}`}
-                                  >
-                                    Proses
-                                  </button>
-                                  <button
-                                    onClick={() => updateStatus(pengaduan._id, 'ditolak')}
-                                    className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-red-300 bg-red-900/30 hover:bg-red-900/50 border border-red-700/50' : 'text-red-600 bg-red-100 hover:text-red-900'}`}
-                                  >
-                                    Tolak
-                                  </button>
-                                </>
-                              )}
-
-                              {pengaduan.status === 'proses' && (
-                                <>
-                                  <button
-                                    onClick={() => updateStatus(pengaduan._id, 'ditindaklanjuti')}
-                                    className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-purple-300 bg-purple-900/30 hover:bg-purple-900/50 border border-purple-700/50' : 'text-purple-600 bg-purple-100 hover:text-purple-900'}`}
-                                  >
-                                    Tindaklanjuti
-                                  </button>
-                                  <button
-                                    onClick={() => updateStatus(pengaduan._id, 'selesai')}
-                                    className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-green-300 bg-green-900/30 hover:bg-green-900/50 border border-green-700/50' : 'text-green-600 bg-green-100 hover:text-green-900'}`}
-                                  >
-                                    Selesai
-                                  </button>
-                                </>
-                              )}
-
-                              {pengaduan.status === 'ditindaklanjuti' && (
-                                <button
-                                  onClick={() => updateStatus(pengaduan._id, 'selesai')}
-                                  className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-green-300 bg-green-900/30 hover:bg-green-900/50 border border-green-700/50' : 'text-green-600 bg-green-100 hover:text-green-900'}`}
-                                >
-                                  Selesai
-                                </button>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-
-                {filteredPengaduan.length === 0 && (
-                  <div className="text-center py-12">
-                    <FileText className={`mx-auto h-12 w-12 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`} />
-                    <h3 className={`mt-2 text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>Tidak ada pengaduan</h3>
-                    <p className={`mt-1 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Belum ada pengaduan dengan status yang dipilih.</p>
-                  </div>
-                )}
+              <div className="ml-4">
+                <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Total</p>
+                <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{pengaduanList.length}</p>
               </div>
             </div>
           </div>
-        </>
-      )}
+
+          <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
+            <div className="flex items-center">
+              <div className={`p-2 ${darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100'} rounded-lg`}>
+                <Clock className={`w-6 h-6 ${darkMode ? 'text-yellow-300' : 'text-yellow-600'}`} />
+              </div>
+              <div className="ml-4">
+                <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Menunggu</p>
+                <p className={`text-2xl font-bold ${darkMode ? 'text-yellow-300' : 'text-yellow-600'}`}>{statusCount.menunggu}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
+            <div className="flex items-center">
+              <div className={`p-2 ${darkMode ? 'bg-blue-900/30' : 'bg-blue-100'} rounded-lg`}>
+                <AlertCircle className={`w-6 h-6 ${darkMode ? 'text-blue-300' : 'text-blue-600'}`} />
+              </div>
+              <div className="ml-4">
+                <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Proses</p>
+                <p className={`text-2xl font-bold ${darkMode ? 'text-blue-300' : 'text-blue-600'}`}>{statusCount.proses}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
+            <div className="flex items-center">
+              <div className={`p-2 ${darkMode ? 'bg-green-900/30' : 'bg-green-100'} rounded-lg`}>
+                <CheckCircle className={`w-6 h-6 ${darkMode ? 'text-green-300' : 'text-green-600'}`} />
+              </div>
+              <div className="ml-4">
+                <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Ditindaklanjuti</p>
+                <p className={`text-2xl font-bold ${darkMode ? 'text-green-300' : 'text-green-600'}`}>{statusCount.ditindaklanjuti}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow p-6`}>
+            <div className="flex items-center">
+              <div className={`p-2 ${darkMode ? 'bg-red-900/30' : 'bg-red-100'} rounded-lg`}>
+                <XCircle className={`w-6 h-6 ${darkMode ? 'text-red-300' : 'text-red-600'}`} />
+              </div>
+              <div className="ml-4">
+                <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Selesai</p>
+                <p className={`text-2xl font-bold ${darkMode ? 'text-red-300' : 'text-red-600'}`}>{statusCount.selesai}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Filter */}
+        <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow mb-6 p-6`}>
+          <div className="flex items-center space-x-4">
+            <label className={`text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Filter Status:</label>
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className={`border ${darkMode ? 'border-slate-600 bg-slate-700 text-white focus:ring-blue-400' : 'border-gray-300 bg-white text-gray-900 focus:ring-blue-500'} rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2`}
+            >
+              <option value="all">Semua Status</option>
+              <option value="menunggu">Menunggu</option>
+              <option value="proses">Proses</option>
+              <option value="ditindaklanjuti">Ditindaklanjuti</option>
+              <option value="selesai">Selesai</option>
+              <option value="ditolak">Ditolak</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Pengaduan List */}
+        <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow`}>
+          <div className={`px-6 py-4 border-b ${darkMode ? 'border-slate-700' : 'border-gray-200'}`}>
+            <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Daftar Pengaduan</h2>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+              <thead className={`${darkMode ? 'bg-slate-700' : 'bg-gray-50'}`}>
+                <tr>
+                  <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Pengadu</th>
+                  <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Judul</th>
+                  <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Kategori</th>
+                  <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Lokasi</th>
+                  <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Status</th>
+                  <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Tanggal</th>
+                  <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Aksi</th>
+                </tr>
+              </thead>
+              <tbody className={`${darkMode ? 'bg-slate-800 divide-slate-700' : 'bg-white divide-gray-200'} divide-y`}>
+                {filteredPengaduan.map((pengaduan) => {
+                  const userInfo = getUserInfo(pengaduan.warga);
+                  return (
+                    <tr key={pengaduan._id} className={`${darkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-50'}`}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{userInfo.nama}</div>
+                        <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{userInfo.email}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'} max-w-xs truncate`}>{pengaduan.judul}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{pengaduan.kategori}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'} max-w-xs truncate`}>{pengaduan.lokasi}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(pengaduan.status)}</td>
+                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{formatDate(pengaduan.createdAt)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div className="flex space-x-2">
+                          <button onClick={() => viewDetail(pengaduan._id)} className={`${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-900'}`}>
+                            <Eye className="w-4 h-4" />
+                          </button>
+
+                          {pengaduan.status === 'menunggu' && (
+                            <>
+                              <button
+                                onClick={() => updateStatus(pengaduan._id, 'proses')}
+                                className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-blue-300 bg-blue-900/30 hover:bg-blue-900/50 border border-blue-700/50' : 'text-blue-600 bg-blue-100 hover:text-blue-900'}`}
+                              >
+                                Proses
+                              </button>
+                              <button
+                                onClick={() => updateStatus(pengaduan._id, 'ditolak')}
+                                className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-red-300 bg-red-900/30 hover:bg-red-900/50 border border-red-700/50' : 'text-red-600 bg-red-100 hover:text-red-900'}`}
+                              >
+                                Tolak
+                              </button>
+                            </>
+                          )}
+
+                          {pengaduan.status === 'proses' && (
+                            <>
+                              <button
+                                onClick={() => updateStatus(pengaduan._id, 'ditindaklanjuti')}
+                                className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-purple-300 bg-purple-900/30 hover:bg-purple-900/50 border border-purple-700/50' : 'text-purple-600 bg-purple-100 hover:text-purple-900'}`}
+                              >
+                                Tindaklanjuti
+                              </button>
+                              <button
+                                onClick={() => updateStatus(pengaduan._id, 'selesai')}
+                                className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-green-300 bg-green-900/30 hover:bg-green-900/50 border border-green-700/50' : 'text-green-600 bg-green-100 hover:text-green-900'}`}
+                              >
+                                Selesai
+                              </button>
+                            </>
+                          )}
+
+                          {pengaduan.status === 'ditindaklanjuti' && (
+                            <button
+                              onClick={() => updateStatus(pengaduan._id, 'selesai')}
+                              className={`px-2 py-1 text-xs rounded ${darkMode ? 'text-green-300 bg-green-900/30 hover:bg-green-900/50 border border-green-700/50' : 'text-green-600 bg-green-100 hover:text-green-900'}`}
+                            >
+                              Selesai
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            {filteredPengaduan.length === 0 && (
+              <div className="text-center py-12">
+                <FileText className={`mx-auto h-12 w-12 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                <h3 className={`mt-2 text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>Tidak ada pengaduan</h3>
+                <p className={`mt-1 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Belum ada pengaduan dengan status yang dipilih.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* Modal Detail */}
       {showModal && selectedPengaduan && (
@@ -465,7 +453,7 @@ function AdminTotalPengaduan() {
                         updateStatus(selectedPengaduan._id, 'proses');
                         setShowModal(false);
                       }}
-                      className={`px-4 py-2 text-sm font-medium rounded-md ${darkMode ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
+                      className="px-4 py-2 text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 text-white"
                     >
                       Set ke Proses
                     </button>
@@ -474,7 +462,7 @@ function AdminTotalPengaduan() {
                         updateStatus(selectedPengaduan._id, 'ditolak');
                         setShowModal(false);
                       }}
-                      className={`px-4 py-2 text-sm font-medium rounded-md ${darkMode ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-red-600 hover:bg-red-700 text-white'}`}
+                      className="px-4 py-2 text-sm font-medium rounded-md bg-red-600 hover:bg-red-700 text-white"
                     >
                       Tolak
                     </button>
@@ -488,7 +476,7 @@ function AdminTotalPengaduan() {
                         updateStatus(selectedPengaduan._id, 'ditindaklanjuti');
                         setShowModal(false);
                       }}
-                      className={`px-4 py-2 text-sm font-medium rounded-md ${darkMode ? 'bg-purple-600 hover:bg-purple-700 text-white' : 'bg-purple-600 hover:bg-purple-700 text-white'}`}
+                      className="px-4 py-2 text-sm font-medium rounded-md bg-purple-600 hover:bg-purple-700 text-white"
                     >
                       Tindaklanjuti
                     </button>
@@ -497,7 +485,7 @@ function AdminTotalPengaduan() {
                         updateStatus(selectedPengaduan._id, 'selesai');
                         setShowModal(false);
                       }}
-                      className={`px-4 py-2 text-sm font-medium rounded-md ${darkMode ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white'}`}
+                      className="px-4 py-2 text-sm font-medium rounded-md bg-green-600 hover:bg-green-700 text-white"
                     >
                       Selesaikan
                     </button>
@@ -510,7 +498,7 @@ function AdminTotalPengaduan() {
                       updateStatus(selectedPengaduan._id, 'selesai');
                       setShowModal(false);
                     }}
-                    className={`px-4 py-2 text-sm font-medium rounded-md ${darkMode ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white'}`}
+                    className="px-4 py-2 text-sm font-medium rounded-md bg-green-600 hover:bg-green-700 text-white"
                   >
                     Selesaikan
                   </button>

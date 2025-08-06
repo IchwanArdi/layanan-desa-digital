@@ -1,4 +1,3 @@
-// components/Layout/Header.jsx
 import { LogOut, Menu, User, Moon, Sun, Settings } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
@@ -17,10 +16,6 @@ export default function Header({ toggleSidebar, userName, email }) {
 
   // Ambil role dari user dengan pengecekan lebih teliti
   const role = user?.role || null;
-
-  // Debug: log role untuk memastikan nilainya benar
-  console.log('Current user role:', role);
-  console.log('User object:', user);
 
   // Fungsi untuk menangani logout
   const handleLogout = async () => {
@@ -51,11 +46,20 @@ export default function Header({ toggleSidebar, userName, email }) {
 
   // Ambil judul halaman berdasarkan pathname
   const getPageTitle = (pathname) => {
-    if (pathname === '/dashboard' || pathname === '/dashboard/') return 'Dashboard';
-    if (pathname.includes('/dashboard/layanan-dokumen')) return 'Layanan Dokumen';
-    if (pathname.includes('/dashboard/pengajuan')) return 'Pengajuan';
-    if (pathname.includes('/dashboard/profil')) return 'Profil';
-    return 'Dashboard';
+    const isAdmin = role === 'admin';
+    if (isAdmin) {
+      if (pathname === '/admin' || pathname === '/admin/dashboard') return 'Dashboard Admin';
+      if (pathname.includes('/admin/pengajuan')) return 'Pengajuan Admin';
+      if (pathname.includes('/admin/pengaduan')) return 'Pengaduan Admin';
+      if (pathname.includes('/admin/profile')) return 'Profil Admin';
+      return 'Dashboard Admin';
+    } else {
+      if (pathname === '/dashboard' || pathname === '/dashboard/') return 'Dashboard';
+      if (pathname.includes('/dashboard/layanan-dokumen')) return 'Layanan Dokumen';
+      if (pathname.includes('/dashboard/pengaduan')) return 'Pengaduan';
+      if (pathname.includes('/dashboard/profil')) return 'Profil';
+      return 'Dashboard';
+    }
   };
 
   const pageTitle = getPageTitle(location.pathname);

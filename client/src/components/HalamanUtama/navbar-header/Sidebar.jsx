@@ -1,12 +1,11 @@
 // Import gambar logo, data navigasi, ikon, dan beberapa hook/utilitas
 import icon from '../../../assets/icon.png';
-import { navItems } from './data';
 import { Home, FileText, MessageSquare, User, LogOut, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useSettings } from '../../../contexts/SettingsContext';
 
-export default function Sidebar({ isSidebarOpen, closeSidebar, handleNavigation, currentSection }) {
+export default function Sidebar({ isSidebarOpen, closeSidebar, handleNavigation, currentSection, navItems }) {
   const navigate = useNavigate();
   const { darkMode } = useSettings();
 

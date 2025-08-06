@@ -11,12 +11,14 @@ import RegisterPage from './components/Login/RegisterPage.jsx';
 import IndexHalamanUtama from './components/HalamanUtama/Index.jsx';
 import DashboardPage from './components/HalamanUtama/pages/DashboardPage.jsx';
 import LayananDokumenPage from './components/HalamanUtama/pages/LayananDokumenPage.jsx';
-import PengajuanPage from './components/HalamanUtama/pages/PengajuanPage.jsx';
+import PengaduanPage from './components/HalamanUtama/pages/PengaduanPage.jsx';
 import ProfilPage from './components/HalamanUtama/pages/ProfilPage.jsx';
 import NotFoundPage from './components/404/NotFoundPage.jsx';
 import AdminPage from './pages/AdminPage.jsx'; // Halaman Admin
 import AdminLayout from './layouts/AdminLayout.jsx'; // Layout untuk Admin
 import AdminTotalPengaduan from './pages/AdminTotalPengaduan.jsx'; // Halaman Total Pengaduan Admin
+import AdminProfilePage from './pages/AdminProfilePage.jsx';
+import AdminTotalAjukanData from './pages/AdminTotalAjukanData.jsx';
 import { SettingsProvider } from './contexts/SettingsContext.jsx';
 import './App.css';
 
@@ -82,8 +84,8 @@ const router = createBrowserRouter([
         element: <LayananDokumenPage />,
       },
       {
-        path: 'pengajuan',
-        element: <PengajuanPage />,
+        path: 'pengaduan',
+        element: <PengaduanPage />,
       },
       {
         path: 'profil',
@@ -107,20 +109,20 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        index: true,
+        path: '',
         element: <AdminPage />,
+      },
+      {
+        path: 'pengajuan',
+        element: <AdminTotalAjukanData />,
       },
       {
         path: 'pengaduan',
         element: <AdminTotalPengaduan />,
       },
       {
-        path: 'data',
-        element: <div>Halaman Data Admin</div>,
-      },
-      {
-        path: 'pengaduan',
-        element: <div>Halaman Pengaduan Admin</div>,
+        path: 'profile',
+        element: <AdminProfilePage />,
       },
       {
         path: '*',

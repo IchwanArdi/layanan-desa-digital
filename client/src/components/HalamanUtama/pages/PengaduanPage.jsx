@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Send, CircleCheck, AlertCircle } from 'lucide-react';
 import { useSettings } from '../../../contexts/SettingsContext';
 
-function PengajuanPage() {
+function PengaduanPage() {
   const { darkMode } = useSettings();
 
   const [formData, setFormData] = useState({
@@ -252,4 +252,4 @@ function PengajuanPage() {
   );
 }
 
-export default PengajuanPage;
+export default PengaduanPage;

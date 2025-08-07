@@ -14,7 +14,7 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
 
     // 🔹 Filter query: jika admin ambil semua, jika user ambil miliknya saja
     const pengaduanQuery = isAdmin ? {} : { warga: userId };
-    const pengajuanQuery = isAdmin ? {} : { userId };
+    const pengajuanQuery = isAdmin ? {} : { warga: userId };
 
     // 🔹 Hitung total pengaduan
     const totalPengaduan = await Pengaduan.countDocuments(pengaduanQuery);

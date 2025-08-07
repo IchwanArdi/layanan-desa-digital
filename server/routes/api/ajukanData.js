@@ -24,7 +24,7 @@ router.post('/pengajuan-dokumen', isAuthenticated, async (req, res) => {
       telepon: phone.trim(),
       alamat: address.trim(),
       keperluan: purpose.trim(),
-      userId, // Set ID user yang mengajukan
+      warga: userId, // Set ID user yang mengajukan
       status: 'menunggu', // Status awal pengajuan
     };
 
@@ -34,7 +34,7 @@ router.post('/pengajuan-dokumen', isAuthenticated, async (req, res) => {
     // Simpan pengajuan dokumen ke database
     const newPengajuan = new PengajuanDokumen({
       ...encryptedPengajuanDokumen,
-      userId, // Set ID user yang mengajukan
+      warga: userId, // Set ID user yang mengajukan
     });
 
     await newPengajuan.save();

@@ -1,9 +1,9 @@
-// IndexHalamanUtama.jsx
 import { useEffect } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
-import SidebarWithHeader from './navbar-header/SidebarWithHeader.jsx';
 import 'aos/dist/aos.css';
+import { Activity } from 'lucide-react';
 import { useSettings } from '../../contexts/SettingsContext.jsx'; // Import context untuk dark mode
+import SidebarWithHeader from './navbar-header/SidebarWithHeader.jsx';
 
 export default function IndexHalamanUtama() {
   const navigate = useNavigate();
@@ -20,7 +20,14 @@ export default function IndexHalamanUtama() {
 
   // Jika belum login, jangan render apapun (atau bisa loading spinner)
   if (!user) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className={`${darkMode ? 'text-white' : 'text-gray-800'} flex items-center space-x-3`}>
+          <Activity className="w-8 h-8 animate-spin" />
+          <span className="text-xl">Memuat Halaman...</span>
+        </div>
+      </div>
+    );
   }
 
   return (

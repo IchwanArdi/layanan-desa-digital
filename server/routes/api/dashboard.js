@@ -24,7 +24,7 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
     });
     const totalPengaduanSelesai = await Pengaduan.countDocuments({
       ...pengaduanQuery,
-      status: 'selesai',
+      status: { $in: ['selesai', 'ditolak'] },
     });
 
     // 🔹 Hitung total pengajuan dokumen
@@ -35,7 +35,7 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
     });
     const totalPengajuanDokumenSelesai = await PengajuanDokumen.countDocuments({
       ...pengajuanQuery,
-      status: 'selesai',
+      status: { $in: ['selesai', 'ditolak'] },
     });
 
     // 🔹 Ambil data terbaru
@@ -45,6 +45,9 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
     // 🔹 Dekripsi data
     const pengaduanTerbaru = decryptArrayData(pengaduanTerbaruRaw, decryptPengaduan);
     const pengajuanDokumenTerbaru = decryptArrayData(pengajuanDokumenTerbaruRaw, decryptPengajuanDokumen);
+
+    // menjumlahkan total pengaduan + pengajuan yang selesai
+    totalLayananSelesai = totalPengaduanSelesai + totalPengajuanDokumenSelesai;
 
     // 🔹 Kirim ke frontend
     res.json({
@@ -63,6 +66,9 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
       totalPengajuanDokumenProses,
       totalPengajuanDokumenSelesai,
       pengajuanDokumenTerbaru,
+
+      // total layanan
+      totalLayananSelesai,
     });
   } catch (error) {
     console.error('Error loading dashboard:', error);

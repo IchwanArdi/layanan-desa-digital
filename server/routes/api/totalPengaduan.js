@@ -108,39 +108,4 @@ router.put('/pengaduan/:id/status', isAuthenticated, requireAdmin, async (req, r
   }
 });
 
-// 🔹 TAMBAHAN: Endpoint untuk mendapatkan detail pengaduan (opsional, untuk modal detail)
-router.get('/pengaduan/:id', isAuthenticated, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.session.user._id;
-    const isAdmin = req.session.user.role === 'admin';
-
-    // Query berdasarkan role: admin bisa lihat semua, user hanya miliknya
-    const query = isAdmin ? { _id: id } : { _id: id, userId };
-
-    const pengaduanRaw = await Pengaduan.findOne(query);
-
-    if (!pengaduanRaw) {
-      return res.status(404).json({
-        success: false,
-        message: 'Pengaduan tidak ditemukan',
-      });
-    }
-
-    // Decrypt data
-    const pengaduan = decryptPengaduan(pengaduanRaw);
-
-    res.json({
-      success: true,
-      data: pengaduan,
-    });
-  } catch (error) {
-    console.error('Error fetching pengaduan detail:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Terjadi kesalahan saat mengambil detail pengaduan',
-    });
-  }
-});
-
 module.exports = router;

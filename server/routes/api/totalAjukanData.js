@@ -54,4 +54,58 @@ router.get('/PengajuanDokumen', isAuthenticated, async (req, res) => {
   }
 });
 
+// 🔹 TAMBAHAN: Endpoint untuk update status pengaduan (hanya admin)
+router.put('/pengajuandokumen/:id/status', isAuthenticated, requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, keteranganAdmin } = req.body;
+
+    // Validasi status yang diizinkan
+    const validStatuses = ['menunggu', 'proses', 'ditindaklanjuti', 'selesai', 'ditolak'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Status tidak valid. Status yang diizinkan: ' + validStatuses.join(', '),
+      });
+    }
+
+    // Cari pengaduan berdasarkan ID
+    const pengajuan = await PengajuanDokumen.findById(id);
+    if (!pengajuan) {
+      return res.status(404).json({
+        success: false,
+        message: 'pengajuan tidak ditemukan',
+      });
+    }
+
+    // Update status pengajuan
+    const updateData = {
+      status,
+      updatedAt: new Date(),
+    };
+
+    // Jika ada keterangan admin, encrypt dan simpan
+    if (keteranganAdmin) {
+      updateData.keteranganAdmin = keteranganAdmin; // Encrypt jika diperlukan
+    }
+
+    const updatedPengajuan = await PengajuanDokumen.findByIdAndUpdate(id, updateData, { new: true });
+
+    // Decrypt data untuk response
+    const decryptedPengajuan = decryptPengajuanDokumen(updatedPengajuan);
+
+    res.json({
+      success: true,
+      message: `Status pengajuan berhasil diubah menjadi "${status}"`,
+      data: decryptedPengajuan,
+    });
+  } catch (error) {
+    console.error('Error updating pengajuan status:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat mengupdate status pengajuan',
+    });
+  }
+});
+
 module.exports = router;

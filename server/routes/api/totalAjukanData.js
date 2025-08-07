@@ -37,8 +37,6 @@ router.get('/PengajuanDokumen', isAuthenticated, async (req, res) => {
     const ajukanTerbaruRaw = await PengajuanDokumen.find(ajukanQuery).sort({ createdAt: -1 });
     const ajukanTerbaru = decryptArrayData(ajukanTerbaruRaw, decryptPengajuanDokumen);
 
-    console.log(ajukanTerbaru);
-
     res.json({
       nama: req.session.user.nama,
       role: req.session.user.role,

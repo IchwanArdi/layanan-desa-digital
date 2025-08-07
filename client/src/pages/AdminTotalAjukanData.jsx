@@ -3,9 +3,10 @@ import { CheckCircle, Clock, AlertCircle, XCircle, Eye, FileText, Activity } fro
 import { toast } from 'react-toastify';
 import { useSettings } from '../contexts/SettingsContext';
 import { getUserInfo, getStatusBadge, formatDate } from '../components/Admin/uiUtils';
+import { pengajuanColumns, emptyMessages } from '../components/Admin/TableConfigs';
 import StatsCards from '../components/Admin/StatsCards';
 import DataTable from '../components/Admin/DataTable';
-import { pengajuanColumns, emptyMessages } from '../components/Admin/TableConfigs';
+import DetailModal from '../components/Admin/DetailModel';
 
 function AdminTotalAjukanData() {
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -81,7 +82,7 @@ function AdminTotalAjukanData() {
 
   const updateStatus = async (ajukanId, newStatus) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/PengajuanDokumen/${ajukanId}/status`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pengajuandokumen/${ajukanId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -97,6 +98,7 @@ function AdminTotalAjukanData() {
 
       if (response.ok) {
         toast.success(`Status pengajuan berhasil diubah menjadi ${newStatus}`);
+        console.log(result);
 
         // Update local data
         setPengajuanList((prevList) => prevList.map((item) => (item._id === ajukanId ? { ...item, status: newStatus, updatedAt: new Date().toISOString() } : item)));
@@ -111,6 +113,7 @@ function AdminTotalAjukanData() {
         }
       } else {
         toast.error(result.message || 'Gagal mengubah status pengajuan');
+        console.log('error:', result);
       }
     } catch (error) {
       console.error('Error updating status:', error);
@@ -194,138 +197,7 @@ function AdminTotalAjukanData() {
       </div>
 
       {/* Modal Detail */}
-      {showModal && selectedPengajuan && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className={`relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white'}`}>
-            <div className="mt-3">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>Detail Pengajuan</h3>
-                <button onClick={() => setShowModal(false)} className={`${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}>
-                  <XCircle className="w-6 h-6" />
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Judul</label>
-                  <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{selectedPengajuan.jenisDokumen}</p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Kategori</label>
-                    <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{selectedPengajuan.kategori}</p>
-                  </div>
-                  <div>
-                    <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Status</label>
-                    {/* Pass darkMode as second parameter to getStatusBadge */}
-                    <div className="mt-1">{getStatusBadge(selectedPengajuan.status, darkMode)}</div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>alamat</label>
-                  <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{selectedPengajuan.alamat}</p>
-                </div>
-
-                <div>
-                  <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Deskripsi</label>
-                  <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'} whitespace-pre-wrap`}>{selectedPengajuan.catatan}</p>
-                </div>
-
-                <div>
-                  <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Pengadu</label>
-                  <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    {selectedPengajuan.warga?.nama} ({selectedPengajuan.warga?.email})
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Tanggal Dibuat</label>
-                    <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{formatDate(selectedPengajuan.createdAt)}</p>
-                  </div>
-                  <div>
-                    <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Terakhir Diupdate</label>
-                    <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{formatDate(selectedPengajuan.updatedAt)}</p>
-                  </div>
-                </div>
-
-                {selectedPengajuan.keteranganAdmin && (
-                  <div>
-                    <label className={`block text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>Keterangan Admin</label>
-                    <p className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{selectedPengajuan.keteranganAdmin}</p>
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-6 flex justify-end space-x-3">
-                {selectedPengajuan.status === 'menunggu' && (
-                  <>
-                    <button
-                      onClick={() => {
-                        updateStatus(selectedPengajuan._id, 'proses');
-                        setShowModal(false);
-                      }}
-                      className="px-4 py-2 text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 text-white"
-                    >
-                      Set ke Proses
-                    </button>
-                    <button
-                      onClick={() => {
-                        updateStatus(selectedPengajuan._id, 'ditolak');
-                        setShowModal(false);
-                      }}
-                      className="px-4 py-2 text-sm font-medium rounded-md bg-red-600 hover:bg-red-700 text-white"
-                    >
-                      Tolak
-                    </button>
-                  </>
-                )}
-
-                {selectedPengajuan.status === 'proses' && (
-                  <>
-                    <button
-                      onClick={() => {
-                        updateStatus(selectedPengajuan._id, 'ditindaklanjuti');
-                        setShowModal(false);
-                      }}
-                      className="px-4 py-2 text-sm font-medium rounded-md bg-purple-600 hover:bg-purple-700 text-white"
-                    >
-                      Tindaklanjuti
-                    </button>
-                    <button
-                      onClick={() => {
-                        updateStatus(selectedPengajuan._id, 'selesai');
-                        setShowModal(false);
-                      }}
-                      className="px-4 py-2 text-sm font-medium rounded-md bg-green-600 hover:bg-green-700 text-white"
-                    >
-                      Selesaikan
-                    </button>
-                  </>
-                )}
-
-                {selectedPengajuan.status === 'ditindaklanjuti' && (
-                  <button
-                    onClick={() => {
-                      updateStatus(selectedPengajuan._id, 'selesai');
-                      setShowModal(false);
-                    }}
-                    className="px-4 py-2 text-sm font-medium rounded-md bg-green-600 hover:bg-green-700 text-white"
-                  >
-                    Selesaikan
-                  </button>
-                )}
-
-                <button onClick={() => setShowModal(false)} className={`px-4 py-2 text-sm font-medium rounded-md ${darkMode ? 'bg-slate-600 text-white hover:bg-slate-500' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}>
-                  Tutup
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <DetailModal showModal={showModal} onClose={() => setShowModal(false)} selectedItem={selectedPengajuan} darkMode={darkMode} getStatusBadge={getStatusBadge} formatDate={formatDate} updateStatus={updateStatus} type="pengajuan" />
     </div>
   );
 }

@@ -7,7 +7,6 @@ const StatsCards = ({
   darkMode,
   type = 'pengajuan', // 'pengajuan', 'pengaduan', atau custom
   customStats = null, // untuk konfigurasi custom
-  gridCols = 5, // jumlah kolom, default 5
 }) => {
   // Konfigurasi default untuk berbagai jenis data
   const getStatsConfig = () => {
@@ -132,10 +131,9 @@ const StatsCards = ({
   };
 
   const statsData = getStatsConfig();
-  const gridClass = `grid-cols-1 md:grid-cols-${gridCols}`;
 
   return (
-    <div className={`grid ${gridClass} gap-6 mb-8`}>
+    <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8`}>
       {statsData.map((stat, index) => {
         const IconComponent = stat.icon;
         return (

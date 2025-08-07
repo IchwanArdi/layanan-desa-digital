@@ -150,9 +150,9 @@ function AdminTotalPengaduan() {
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          <StatsCards statusCount={statusCount} totalItems={pengaduanList.length} darkMode={darkMode} type="pengaduan" />
-        </div>
+
+        <StatsCards statusCount={statusCount} totalItems={pengaduanList.length} darkMode={darkMode} type="pengaduan" />
+
         {/* Filter */}
         <div className={`${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white'} rounded-lg shadow mb-6 p-6`}>
           <div className="flex items-center space-x-4">

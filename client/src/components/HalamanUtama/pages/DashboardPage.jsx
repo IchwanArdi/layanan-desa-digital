@@ -24,7 +24,6 @@ function DashboardPage() {
 
         if (response.ok) {
           setDashboardData(result);
-          console.log('Dashboard data:', result);
         } else {
           toast.error(result.message || 'Gagal mengambil data dashboard.');
         }
@@ -72,11 +71,11 @@ function DashboardPage() {
         border: darkMode ? 'border-violet-500/30' : 'border-violet-200',
         label: 'Ditindaklanjuti',
       },
-      proses: {
-        bg: darkMode ? 'bg-blue-500/20' : 'bg-blue-100',
-        text: darkMode ? 'text-blue-300' : 'text-blue-600',
-        border: darkMode ? 'border-blue-500/30' : 'border-blue-200',
-        label: 'Proses',
+      ditolak: {
+        bg: darkMode ? 'bg-red-500/20' : 'bg-red-100',
+        text: darkMode ? 'text-red-300' : 'text-red-600',
+        border: darkMode ? 'border-red-500/30' : 'border-red-200',
+        label: 'Ditolak',
       },
     };
 
@@ -155,7 +154,7 @@ function DashboardPage() {
                       <p className={`${darkMode ? 'text-slate-400' : 'text-gray-600'} text-sm font-medium`}>Pengaduan Aktif</p>
                       <p className={`${darkMode ? 'text-slate-100' : 'text-gray-800'} text-2xl font-bold mt-1`}>{dashboardData?.totalPengaduan ?? 0}</p>
                       <p className={`${darkMode ? 'text-emerald-300' : 'text-emerald-600'} text-xs mt-2`}>
-                        Total: {dashboardData?.totalPengaduan ?? 0} | Selesai: {dashboardData?.pengaduanSelesai ?? 0}
+                        Total: {dashboardData?.totalPengaduan ?? 0} | Selesai: {dashboardData?.totalPengaduanSelesai ?? 0}
                       </p>
                     </div>
                     <div className={`${darkMode ? 'bg-emerald-500/20' : 'bg-emerald-50'} p-3 rounded-lg`}>
@@ -169,7 +168,7 @@ function DashboardPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className={`${darkMode ? 'text-slate-400' : 'text-gray-600'} text-sm font-medium`}>Layanan Selesai</p>
-                      <p className={`${darkMode ? 'text-slate-100' : 'text-gray-800'} text-2xl font-bold mt-1`}>{dashboardData?.layananSelesai ?? 0}</p>
+                      <p className={`${darkMode ? 'text-slate-100' : 'text-gray-800'} text-2xl font-bold mt-1`}>{dashboardData?.totalLayananSelesai ?? 0}</p>
                       <p className={`${darkMode ? 'text-violet-300' : 'text-violet-600'} text-xs mt-2`}>
                         Dokumen: {dashboardData?.totalPengajuanDokumenSelesai ?? 0} | Pengaduan: {dashboardData?.totalPengaduanSelesai ?? 0}
                       </p>

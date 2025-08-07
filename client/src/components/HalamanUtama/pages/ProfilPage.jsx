@@ -24,7 +24,6 @@ function ProfilPage() {
         const result = await response.json();
         if (response.ok) {
           setDashboardData(result);
-          console.log('Dashboard data:', result);
         } else {
           toast.error(result.message || 'Gagal mengambil data dashboard.');
         }
@@ -247,6 +246,9 @@ function ProfilPage() {
                         } else if (statusText === 'menunggu') {
                           statusClass = darkMode ? 'bg-slate-600/50 text-slate-300' : 'bg-gray-100 text-gray-600';
                           statusText = 'Menunggu';
+                        } else if (statusText === 'ditolak') {
+                          statusClass = darkMode ? 'bg-red-600/50 text-red-300' : 'bg-red-100 text-red-600';
+                          statusText = 'Ditolak';
                         }
 
                         return (
@@ -280,6 +282,9 @@ function ProfilPage() {
                         } else if (statusText === 'menunggu') {
                           statusClass = darkMode ? 'bg-slate-600/50 text-slate-300' : 'bg-gray-100 text-gray-600';
                           statusText = 'Menunggu';
+                        } else if (statusText === 'ditolak') {
+                          statusClass = darkMode ? 'bg-red-600/50 text-red-300' : 'bg-red-100 text-red-600';
+                          statusText = 'Ditolak';
                         }
 
                         return (

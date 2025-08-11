@@ -32,7 +32,7 @@ function Navbar() {
     <header id="header" style={{ backgroundColor: 'rgb(0,0,0)' }} className={`sticky top-0 z-40 transition-all duration-300  ${scrolled ? 'backdrop-blur-md' : ''}`}>
       <div id="header-container" className={`container mx-auto flex items-center justify-between max-w-6xl px-5 py-3 shadow-lg rounded-2xl transition-all duration-300 ${scrolled ? 'bg-dark-800' : ''}`}>
         <a href="/" className="flex items-center">
-          <img src={logo} alt="Logo" className="h-12 md:h-16" />
+          <img src={logo} alt="Logo" width="64" height="64" className="h-12 md:h-16" />
         </a>
 
         {/* Desktop Menu */}

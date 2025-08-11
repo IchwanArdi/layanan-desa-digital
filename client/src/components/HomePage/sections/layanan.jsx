@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FilePlus, MessageCircleWarning, SearchCheck, ThumbsUp, ArrowRight, Clock, Users, Star } from 'lucide-react';
 import { Element } from 'react-scroll';
 
 // Placeholder untuk gambar - menggunakan gradients
-import layananDocumentasi from '../../../assets/layanan-dokumentasi.png';
-import layananPengaduan from '../../../assets/layanan-pengaduan.png';
+import layananDocumentasi from '../../../assets/layanan-dokumentasi.webp';
+import layananPengaduan from '../../../assets/layanan-pengaduan.webp';
 
 const layananList = [
   {
@@ -76,7 +76,7 @@ function Layanan() {
               </div>
               <p className="text-gray-300 my-5">Semua layanan tersedia dalam satu platform untuk kemudahan akses.</p>
               <div className="overflow-hidden rounded-lg">
-                <img src={layananDocumentasi} alt="Layanan Dokumentasi" className="w-full h-auto object-cover transition-transform duration-300 " />
+                <img src={layananDocumentasi} alt="Tampilan layanan dokumentasi desa" loading="lazy" width="600" height="400" className="w-full h-auto object-cover transition-transform duration-300" />
               </div>
             </div>
 
@@ -93,7 +93,7 @@ function Layanan() {
               </div>
               <p className="text-gray-300 my-5">Dapat diakses kapan saja dan di mana saja melalui perangkat Anda.</p>
               <div className="overflow-hidden rounded-lg">
-                <img src={layananPengaduan} alt="Layanan Pengaduan" className="w-full h-auto object-cover transition-transform duration-300 " />
+                <img src={layananPengaduan} alt="Formulir pengaduan warga desa" loading="lazy" width="600" height="400" className="w-full h-auto object-cover transition-transform duration-300" />
               </div>
             </div>
           </div>

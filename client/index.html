@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/webp" href="/src/assets/logo.webp" />
-    <link rel="apple-touch-icon" href="/src/assets/logo.webp" />
+    <!-- Favicon - dari public folder -->
+    <link rel="icon" type="image/webp" href="/logo.webp" />
+    <link rel="apple-touch-icon" href="/logo.webp" />
     <meta name="theme-color" content="#1E3A8A" />
 
     <!-- Viewport -->
@@ -19,14 +19,18 @@
     <!-- Open Graph (Social Media Preview) -->
     <meta property="og:title" content="Pengaduan Desa Digital" />
     <meta property="og:description" content="Ajukan data & sampaikan pengaduan warga secara online, cepat, dan langsung ke perangkat desa." />
-    <meta property="og:image" content="/src/assets/preview.webp" />
+    <meta property="og:image" content="https://layanandesa.vercel.app/logo.webp" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://layanandesa.vercel.app/" />
+    <meta property="og:site_name" content="Pengaduan Desa Digital" />
 
-    <!-- Preload penting (LCP) -->
-    <link rel="preload" as="image" href="/src/assets/logo.webp" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Pengaduan Desa Digital" />
+    <meta name="twitter:description" content="Ajukan data & sampaikan pengaduan warga secara online, cepat, dan langsung ke perangkat desa." />
+    <meta name="twitter:image" content="https://layanandesa.vercel.app/logo.webp" />
 
-    <!-- Preconnect & Preload Fonts -->
+    <!-- Preconnect Fonts (tanpa preload logo) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" as="style" />
